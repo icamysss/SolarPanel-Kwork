@@ -5,14 +5,12 @@ namespace _SolarPanel.Scripts.SM
     public abstract class AppState
     {
         private protected readonly AppManager AppManager;
-        public readonly AppState NextState;
-        public readonly AppState PreviousState;
+        public AppState NextState;
+        public AppState PreviousState;
         
-        protected AppState(AppManager appManager, AppState nextState = null, AppState previousState = null)
+        protected AppState(AppManager appManager)
         {
             AppManager = appManager;
-            PreviousState = previousState;
-            NextState = nextState;
         }
         
         public virtual void Enter()

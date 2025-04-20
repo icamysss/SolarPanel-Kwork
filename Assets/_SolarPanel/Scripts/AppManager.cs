@@ -1,24 +1,21 @@
 using System;
 using _SolarPanel.Scripts.SM;
 using _SolarPanel.Scripts.SM.States;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class AppManager : MonoBehaviour
 {
     public static AppManager Instance;
-    
+
     public static Action<AppState> OnChangeState;
-    
+
     private AppState CurrentAppState;
-    private AppState PreviousAppState;
-    private AppState NextAppState;
-    
-    private EnteringHouseParameters enteringHouseParameters;
-    private EnteringPowerConsumption enteringPowerConsumption;
-    private CalculationResult calcResult;
-    private Visualization visualization;
-    
+
+    public EnteringHouseParameters enteringHouseParameters;
+    public EnteringPowerConsumption enteringPowerConsumption;
+    public CalculationResult calcResult;
+    public Visualization visualization;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -31,19 +28,33 @@ public class AppManager : MonoBehaviour
     {
         Initialize();
     }
-    
-    
+
+
     private void Initialize()
     {
-        enteringHouseParameters = new EnteringHouseParameters(this, enteringPowerConsumption);
-        enteringPowerConsumption = new EnteringPowerConsumption(this, calcResult, enteringHouseParameters);
-        calcResult = new CalculationResult(this, visualization, enteringPowerConsumption);
-        visualization = new Visualization(this, null, calcResult);
-        
+        #region  SM
+
+        enteringHouseParameters = new EnteringHouseParameters(this);
+        enteringPowerConsumption = new EnteringPowerConsumption(this);
+        calcResult = new CalculationResult(this);
+        visualization = new Visualization(this);
+
+        enteringHouseParameters.PreviousState = null;
+        enteringHouseParameters.NextState = enteringPowerConsumption;
+
+        enteringPowerConsumption.PreviousState = enteringHouseParameters;
+        enteringPowerConsumption.NextState = calcResult;
+
+        calcResult.PreviousState = enteringPowerConsumption;
+        calcResult.NextState = visualization;
+
+        visualization.PreviousState = calcResult;
+        visualization.NextState = null;
+
         CurrentAppState = enteringHouseParameters;
         CurrentAppState.Enter();
-        NextAppState = enteringPowerConsumption;
-        PreviousAppState = null;
+
+        #endregion
     }
 
 
@@ -51,17 +62,24 @@ public class AppManager : MonoBehaviour
     {
         SetState(CurrentAppState.NextState);
     }
+
     public void PreviousState()
     {
         SetState(CurrentAppState.PreviousState);
     }
-    public void SetState(AppState state)
+
+    public void Restart()
+    {
+        SetState(enteringHouseParameters);
+    }
+
+    private void SetState(AppState state)
     {
         if (state == null)
         {
-           Debug.LogWarning("Cannot set state to null!");
+            Debug.LogWarning("Cannot set state to null!");
         }
-        
+
         CurrentAppState?.Exit();
         CurrentAppState = state;
         CurrentAppState.Enter();

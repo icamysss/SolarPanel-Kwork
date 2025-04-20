@@ -1,16 +1,44 @@
+using System;
+using _SolarPanel.Scripts;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+   public static UIManager Instance;
+   
+   public CanvasGroup houseParameters;
+   public CanvasGroup calculationResult;
+   public CanvasGroup powerConsumption;
+   public CanvasGroup visualization;
+   public Navigation navigation;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   public void Awake()
+   {
+      if (Instance == null) Instance = this;
+      else if (Instance != this) Destroy(gameObject);
+      DontDestroyOnLoad(gameObject);
+   }
+
+   private void Start()
+   {
+      Initialize();
+   }
+
+   private void Initialize()
+   {
+      Show(houseParameters, false);
+      Show(calculationResult, false);
+      Show(powerConsumption, false);
+      Show(visualization, false);
+      navigation.Initialize();
+   }
+
+   public static void Show(CanvasGroup canvasGroup, bool show = true)
+   {
+      canvasGroup.alpha = show ? 1 : 0;
+      canvasGroup.interactable = show;
+      canvasGroup.blocksRaycasts = show;
+      canvasGroup.ignoreParentGroups = true;
+   }
+   
 }
