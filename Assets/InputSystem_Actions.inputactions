@@ -990,6 +990,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Camera",
+            "id": "735ad49b-b4c7-47e2-9040-7a9ffae83588",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "2576f602-b6d7-4cd8-9d13-1ca07227dcba",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "27395a11-a06c-455b-8bec-608069f76514",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
