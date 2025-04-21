@@ -1,3 +1,5 @@
+using _SolarPanel.Scripts.UI;
+
 namespace _SolarPanel.Scripts.SM.States
 {
     public class EnteringHouseParameters : AppState
