@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _SolarPanel.Scripts.Data;
 using _SolarPanel.Scripts.Data.SO;
@@ -15,12 +16,13 @@ namespace _SolarPanel.Scripts
         [SerializeField] private PanelDataSO _panelDataSO;
 
         // Текущие данные, введённые пользователем
-        public float HouseLength { get; set; }
-        public float HouseWidth { get; set; }
-        public RoofType RoofType { get; set; }
+        
+        public HouseParam HouseParam = new ();
         public City SelectedCity { get; private set; }
         public SolarPanel SelectedPanel { get; private set; }
-
+        public float RequiredPower { get; set; }
+        public float DailyConsumption { get; set; }
+        
         // Кэшированные данные
         private Dictionary<string, City> _citiesCache;
         private Dictionary<string, SolarPanel> _panelsCache;
@@ -72,21 +74,53 @@ namespace _SolarPanel.Scripts
             }
         }
 
+        public int GetPanelCount()
+        {
+            return RequiredPower <= 0 ? 0 : Mathf.RoundToInt(RequiredPower * 1000 / SelectedPanel.NominalPower);
+        }
+        
+        public float CalculateRequiredPower()
+        {
+            RequiredPower = DailyConsumption / GetCityAverageInsolation() * Constants.PANELS_KPD;
+            return RequiredPower; 
+        }
+
         // Пример: Получить среднюю инсоляцию за год
-        public float GetCityAnnualInsolation()
+        public float GetCityAverageInsolation()
         {
             if (SelectedCity == null) return 0;
             float sum = 0;
+           
             foreach (var month in SelectedCity.MonthlyData)
             {
                 sum += month.Insolation;
             }
-            return sum / 12;
+            return sum / SelectedCity.MonthlyData.Count;
         }
 
         public IEnumerable<string> GetCityNames()
         {
             return _citiesCache.Keys;
         }
+
+        public IEnumerable<string> GetAllPanels()
+        {
+           return _panelsCache.Keys;
+        }
+    }
+
+    [Serializable]
+    public class HouseParam
+    {
+        public float HouseLength { get; set; } = 9000;
+        public float HouseWidth { get; set; } = 7000;
+        public RoofParam Roof { get; set; } = new();
+    }
+
+    [Serializable]
+    public class RoofParam
+    {
+        public RoofType RoofType { get; set; } = RoofType.Односкатная;
+        public int Angle { get; set; } = 12;
     }
 }

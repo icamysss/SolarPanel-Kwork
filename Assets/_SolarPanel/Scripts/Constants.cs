@@ -12,6 +12,7 @@ namespace _SolarPanel.Scripts
         public const string POWER_CONSUMPTION_HEADER = "Ввод параметров потребления";
         public const string CALCULATION_RESULT_HEADER = "Выбор солнечных панелей";
         public const string VISUALIZATION_HEADER = "Визуализация";
-        
+
+        public const float PANELS_KPD = 0.2f;
     }
 }

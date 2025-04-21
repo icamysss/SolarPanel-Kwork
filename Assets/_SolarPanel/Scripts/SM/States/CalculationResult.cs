@@ -13,7 +13,9 @@ namespace _SolarPanel.Scripts.SM.States
         public override void Enter()
         {
             base.Enter();
+            
             ShowUI();
+            uiManager.results.UpdateRequiredPowerText(DataManager.Instance.CalculateRequiredPower());
         }
 
         public override void Exit()
@@ -21,10 +23,11 @@ namespace _SolarPanel.Scripts.SM.States
             base.Exit();
             ShowUI(false);
         }
-        
+
+       
         private void ShowUI(bool show = true)
         {
-            UIManager.Show(uiManager.calculationResult, show);
+            uiManager.results.Show(show);
             uiManager.navigation.Show(show);
             
             uiManager.navigation.ShowButton(ButtonType.next, show);

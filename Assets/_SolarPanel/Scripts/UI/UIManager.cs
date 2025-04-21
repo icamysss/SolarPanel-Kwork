@@ -1,3 +1,5 @@
+using _SolarPanel.Scripts.UI.CalculationResults;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _SolarPanel.Scripts.UI
@@ -7,7 +9,7 @@ namespace _SolarPanel.Scripts.UI
       public static UIManager Instance;
    
       public CanvasGroup houseParameters;
-      public CanvasGroup calculationResult;
+      public Results results;
       public CanvasGroup powerConsumption;
       public CanvasGroup visualization;
       public Navigation navigation;
@@ -27,10 +29,11 @@ namespace _SolarPanel.Scripts.UI
       private void Initialize()
       {
          Show(houseParameters, false);
-         Show(calculationResult, false);
          Show(powerConsumption, false);
          Show(visualization, false);
+        
          navigation.Initialize();
+         results.Initialize();
       }
 
       public static void Show(CanvasGroup canvasGroup, bool show = true)
