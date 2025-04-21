@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _SolarPanel.Scripts.Data.SO
 {
-    [CreateAssetMenu]
+    [CreateAssetMenu(fileName = "CityDataSO", menuName = "SolarApp/CityData")]
     public class CityDataSO : ScriptableObject {
         public List<City> Cities = new List<City>();
     }

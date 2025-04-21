@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 871989994f8641ee954cf6e6b519713e, type: 3}
+  m_Name: PanelDataSO
+  m_EditorClassIdentifier: 
+  Panels:
+  - PanelName: "\u0412\u043E\u0441\u0442\u043E\u043A \u0424\u0421M M10"
+    NominalPower: 150
+    Dimensions: {x: 1250, y: 30, z: 580}
+    Voltage: 12
+    Technology: PERC
+  - PanelName: "\u0412\u043E\u0441\u0442\u043E\u043A \u0424\u0421M M3"
+    NominalPower: 100
+    Dimensions: {x: 770, y: 30, z: 670}
+    Voltage: 12
+    Technology: PERC
+  - PanelName: "\u042D\u043D\u0435\u0440\u0433\u043E\u0432\u043E\u043B\u044C\u0442
+      400"
+    NominalPower: 400
+    Dimensions: {x: 1775, y: 30, z: 1098}
+    Voltage: 12
+    Technology: PERC
+  - PanelName: "\u042D\u043D\u0435\u0440\u0433\u043E\u0432\u043E\u043B\u044C\u0442
+      410"
+    NominalPower: 410
+    Dimensions: {x: 1775, y: 30, z: 1098}
+    Voltage: 12
+    Technology: PERC
+  - PanelName: Hevel HVL 320
+    NominalPower: 320
+    Dimensions: {x: 1671, y: 35, z: 1002}
+    Voltage: 12
+    Technology: HJT
+  - PanelName: Hevel HVL 395
+    NominalPower: 395
+    Dimensions: {x: 1996, y: 30, z: 1002}
+    Voltage: 12
+    Technology: HJT
