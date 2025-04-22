@@ -10,8 +10,9 @@ namespace _SolarPanel.Scripts.UI.CalculationResults
         [SerializeField] private TextMeshProUGUI selectedPanel;
         [SerializeField] private TMP_Dropdown panelDropdown;
         
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             if (panelDropdown == null) throw new NullReferenceException("panelDropdown");
             if (requiredPower == null) throw new NullReferenceException("requiredPower");
             if (selectedPanel == null) throw new NullReferenceException("selectedPanel");
@@ -23,6 +24,9 @@ namespace _SolarPanel.Scripts.UI.CalculationResults
                 panelDropdown.options.Add(new TMP_Dropdown.OptionData(panelName));
             }
             panelDropdown.onValueChanged.AddListener(OnPanelSelected);
+            panelDropdown.value = 0;
+            panelDropdown.RefreshShownValue();
+            panelDropdown.onValueChanged.Invoke(0);
         }
 
         public void UpdateRequiredPowerText(float power)
@@ -42,7 +46,7 @@ namespace _SolarPanel.Scripts.UI.CalculationResults
 
         private void UpdateSelectedPanelText()
         {
-            selectedPanel.text = $" Необходимое кол-во панелей: \n {DataManager.Instance.GetPanelCount()} шт.";
+            selectedPanel.text = $"Необходимое кол-во панелей: \n {DataManager.Instance.GetPanelCount()} шт.";
         }
     }
 }

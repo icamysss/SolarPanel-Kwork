@@ -26,7 +26,7 @@ namespace _SolarPanel.Scripts.SM.States
         
         private void ShowUI(bool show = true)
         {
-            UIManager.Show(uiManager.houseParameters, show);
+            uiManager.houseParameters.Show(show);
             uiManager.navigation.Show(show);
             uiManager.navigation.ShowButton(ButtonType.next, show);
             uiManager.navigation.SetButtonText(ButtonType.next, Constants.NEXT_BUTTON_TEXT);

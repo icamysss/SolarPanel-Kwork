@@ -15,12 +15,12 @@ namespace _SolarPanel.Scripts.SM
         
         public virtual void Enter()
         {
-            Debug.Log($"Enter {GetType().Name} state");
+           // Debug.Log($"Enter {GetType().Name} state");
         }
 
         public virtual void Exit()
         {
-            Debug.Log($"Exit {GetType().Name} state");
+          //  Debug.Log($"Exit {GetType().Name} state");
         }
     }
 }

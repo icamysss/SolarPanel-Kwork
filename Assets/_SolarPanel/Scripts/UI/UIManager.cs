@@ -1,5 +1,5 @@
 using _SolarPanel.Scripts.UI.CalculationResults;
-using Unity.VisualScripting;
+using _SolarPanel.Scripts.UI.HouseParameters;
 using UnityEngine;
 
 namespace _SolarPanel.Scripts.UI
@@ -8,10 +8,10 @@ namespace _SolarPanel.Scripts.UI
    {
       public static UIManager Instance;
    
-      public CanvasGroup houseParameters;
+      public HouseParamInput houseParameters;
       public Results results;
-      public CanvasGroup powerConsumption;
-      public CanvasGroup visualization;
+      public PowerConsumption.PowerConsumption powerConsumption;
+      public Visualization.Visualization visualization;
       public Navigation navigation;
 
       public void Awake()
@@ -28,12 +28,10 @@ namespace _SolarPanel.Scripts.UI
 
       private void Initialize()
       {
-         Show(houseParameters, false);
-         Show(powerConsumption, false);
-         Show(visualization, false);
-        
          navigation.Initialize();
          results.Initialize();
+         powerConsumption.Initialize();
+         houseParameters.Initialize();
       }
 
       public static void Show(CanvasGroup canvasGroup, bool show = true)

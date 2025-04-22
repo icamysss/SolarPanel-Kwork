@@ -15,5 +15,10 @@ namespace _SolarPanel.Scripts.UI
         {
             UIManager.Show(canvasGroup, show);
         }
+
+        public virtual void Initialize()
+        {
+            Show(false);
+        }
     }
 }
