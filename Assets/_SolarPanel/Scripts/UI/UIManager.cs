@@ -29,9 +29,13 @@ namespace _SolarPanel.Scripts.UI
       private void Initialize()
       {
          navigation.Initialize();
-         results.Initialize();
          powerConsumption.Initialize();
          houseParameters.Initialize();
+         
+         DataManager.Instance.CalculateRequiredPower();
+         results.Initialize();
+
+         
       }
 
       public static void Show(CanvasGroup canvasGroup, bool show = true)

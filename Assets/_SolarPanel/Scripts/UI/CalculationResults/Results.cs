@@ -27,6 +27,7 @@ namespace _SolarPanel.Scripts.UI.CalculationResults
             panelDropdown.value = 0;
             panelDropdown.RefreshShownValue();
             panelDropdown.onValueChanged.Invoke(0);
+            UpdateSelectedPanelText();
         }
 
         public void UpdateRequiredPowerText(float power)
