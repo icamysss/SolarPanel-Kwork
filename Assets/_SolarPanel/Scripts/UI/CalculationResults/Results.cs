@@ -17,8 +17,6 @@ namespace _SolarPanel.Scripts.UI.CalculationResults
             if (requiredPower == null) throw new NullReferenceException("requiredPower");
             if (selectedPanel == null) throw new NullReferenceException("selectedPanel");
             
-            Show(false);
-            
             foreach (var panelName in DataManager.Instance.GetAllPanels())
             {
                 panelDropdown.options.Add(new TMP_Dropdown.OptionData(panelName));

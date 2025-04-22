@@ -1,5 +1,6 @@
 using _SolarPanel.Scripts.UI.CalculationResults;
 using _SolarPanel.Scripts.UI.HouseParameters;
+using _SolarPanel.Scripts.UI.Visualization;
 using UnityEngine;
 
 namespace _SolarPanel.Scripts.UI
@@ -11,7 +12,7 @@ namespace _SolarPanel.Scripts.UI
       public HouseParamInput houseParameters;
       public Results results;
       public PowerConsumption.PowerConsumption powerConsumption;
-      public Visualization.Visualization visualization;
+      public VisualizationUI visualizationUI;
       public Navigation navigation;
 
       public void Awake()

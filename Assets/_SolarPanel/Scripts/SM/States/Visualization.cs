@@ -15,6 +15,7 @@ namespace _SolarPanel.Scripts.SM.States
         {
             base.Enter();
             ShowUI();
+            VisualizationManager.Instance.Generate();
         }
 
         public override void Exit()
@@ -25,7 +26,7 @@ namespace _SolarPanel.Scripts.SM.States
         
         private void ShowUI(bool show = true)
         {
-            uiManager.visualization.Show(show);
+            uiManager.visualizationUI.Show(show);
             uiManager.navigation.Show(show);
             
             uiManager.navigation.ShowButton(ButtonType.restart, show);

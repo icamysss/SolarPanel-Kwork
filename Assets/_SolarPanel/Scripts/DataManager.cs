@@ -76,7 +76,9 @@ namespace _SolarPanel.Scripts
 
         public int GetPanelCount()
         {
-            return RequiredPower <= 0 ? 0 : Mathf.RoundToInt(RequiredPower * 1000 / SelectedPanel.NominalPower);
+            return 
+                Mathf.Clamp(RequiredPower <= 0 ? 0 : 
+                    Mathf.RoundToInt(RequiredPower * 1000 / SelectedPanel.NominalPower),1, 100);
         }
         
         public float CalculateRequiredPower()

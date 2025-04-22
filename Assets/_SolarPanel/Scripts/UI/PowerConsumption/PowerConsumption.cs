@@ -15,6 +15,7 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
 
         public override void Initialize()
         {
+            base.Initialize();
            InitDailyConsumption();
         }
 
@@ -29,7 +30,7 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
         {
             if (float.TryParse(value, out var result))
             {
-                if (result <= 0f) return;
+                result = Mathf.Clamp(result, 0f, 200f);
                 DataManager.Instance.DailyConsumption = result;
             }
             Debug.Log($"Суточное потребление: { DataManager.Instance.DailyConsumption}");

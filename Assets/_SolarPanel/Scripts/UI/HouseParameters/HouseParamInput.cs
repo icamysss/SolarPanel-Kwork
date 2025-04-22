@@ -84,7 +84,7 @@ namespace _SolarPanel.Scripts.UI.HouseParameters
         }
         private void OnAngleChanged(float value)
         {
-            DataManager.Instance.HouseParam.Roof.Angle = (int)value;
+            DataManager.Instance.HouseParam.Roof.Angle = (int)Mathf.Clamp(value, 0f, 60f);
             angleHeader.text = $"Угол наклона кровли: {value}º";
         }
         
@@ -115,7 +115,7 @@ namespace _SolarPanel.Scripts.UI.HouseParameters
         {
             if (float.TryParse(value, out var result))
             {
-                if (result <= 0) return;
+                result = Mathf.Clamp(result, 3f, 30f );
                 DataManager.Instance.HouseParam.HouseLength = result;
                 
             }
@@ -126,7 +126,7 @@ namespace _SolarPanel.Scripts.UI.HouseParameters
         {
             if (float.TryParse(value, out var result))
             {
-                if (result <= 0) return;
+                result = Mathf.Clamp(result, 3f, 30f);
                 DataManager.Instance.HouseParam.HouseWidth = result;
             }
             Debug.Log($"House Width: {DataManager.Instance.HouseParam.HouseWidth}");
