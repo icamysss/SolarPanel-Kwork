@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using _SolarPanel.Scripts.Data;
 using UnityEngine;
+using UnityEngine.ProBuilder;
+using UnityEngine.ProBuilder.MeshOperations;
 
 namespace _SolarPanel.Scripts.VisualGeneration
 {
@@ -17,62 +20,131 @@ namespace _SolarPanel.Scripts.VisualGeneration
 
         public GameObject GenerateRoof()
         {
-            if (houseParam.Roof.RoofType == RoofType.Односкатная)  return GenerateSingleRoof();
-            if (houseParam.Roof.RoofType == RoofType.Двухскатная)  return GenerateDoubleRoof();
+            if (houseParam.Roof.RoofType == RoofType.Односкатная) return GenerateSingleRoof();
+            if (houseParam.Roof.RoofType == RoofType.Двухскатная) return GenerateDoubleRoof();
             return null;
         }
 
         private GameObject GenerateSingleRoof()
         {
-            // при помощи Probuilder api создаем объект 
-            
-            // если угол кровли ( houseParam.Roof.Angle) равен 0 . создаем плоскость в нулевых координах на высоте houseParam.HouseHeight + 0.01,  
-            // в размерах  houseParam.HouseLength + Constants.ROOF_OVERHANG по оси Z,
-            // houseParam.HouseWidth + Constants.ROOF_OVERHANG по оси X;
-            // окрашиваем плоскость в цвет Constants.ROOF_COLOR
-            // назнаем объекту ему parent = parent;
-            // возвращаем объект
-            
-            // если угол кровли больше 0. создаем Треугольную призму.
-            // Основание которой это прямоугольный треугольник,
-            // угол между гипотенузой и основанием  houseParam.Roof.Angle
-            // Длина основания houseParam.HouseWidth + Constants.ROOF_OVERHANG + Constants.ROOF_OVERHANG
-            // Основание треугольника находится на высоте houseParam.HouseHeight + 0.01
-            // а так же по оси Z в координате (houseParam.HouseLength / 2 ) + Constants.ROOF_OVERHANG
-            // второе основание призмы находится зеркально первому, относительно нулевых координат
-            // Завершаем создание призмы соединяя основания выше и красим ее в цвет Constants.ROOF_COLOR
-            
-            // назнаем объекту ему parent = parent;
-            // возвращаем объект
-            
-            return null;
+            if (houseParam.Roof.Angle == 0f)
+            {
+                // Создаем плоскую крышу
+                var roofMesh = ShapeGenerator.GeneratePlane(
+                    PivotLocation.Center,
+                    houseParam.HouseLength, //+ Constants.ROOF_OVERHANG * 2,
+                    houseParam.HouseWidth, // + Constants.ROOF_OVERHANG * 2,
+                    1, 1,
+                    Axis.Up
+                    );
+
+                roofMesh.transform.position = new Vector3(
+                    0f,
+                    houseParam.HouseHeight + 0.01f,
+                    0f
+                    );
+
+                return FinalizeRoof(roofMesh);
+            }
+
+            // Рассчитываем параметры
+            float baseWidth = houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
+            float fullLength = houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2;
+            float triangleHeight = (baseWidth / 2) * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
+
+            // Создаем прямоугольный треугольник
+            ProBuilderMesh triangle = CreateRightTriangle(baseWidth, triangleHeight);
+
+            // Экструдируем треугольник вдоль оси Z
+           // Extrude(triangle, triangle.faces, ExtrudeMethod.FaceNormal, fullLength);
+
+            // Позиционируем и поворачиваем
+            triangle.transform.position = new Vector3(
+                0f,
+                houseParam.HouseHeight + 0.01f + triangleHeight / 2,
+                0f
+                );
+
            
+
+            return FinalizeRoof(triangle);
         }
 
         private GameObject GenerateDoubleRoof()
         {
-            // при помощи Probuilder api создаем объект 
+            if (houseParam.Roof.Angle == 0f)
+            {
+                // Создаем плоскую крышу аналогично односкатной
+                return GenerateSingleRoof();
+            }
+            else
+            {
+                // Рассчитываем параметры треугольной призмы
+                var baseWidth = houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2;
+                var fullLength = houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
+                var height = (baseWidth / 2) * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
+
+                // Создаем треугольник основания
+
+                var triangle = ShapeGenerator.GeneratePrism(PivotLocation.Center,
+                    new Vector3(baseWidth, height, fullLength)); //CreateRightTriangle(baseWidth, height);
+                // Позиционируем и дублируем для симметрии
+                var roof = FinalizeRoof(triangle);
+                roof.transform.localPosition = new Vector3(0, houseParam.HouseHeight + height/2, 0);
+
+                return roof;
+            }
+        }
+        private ProBuilderMesh CreateRightTriangle(float lenght, float height)
+        {
+            Vector3[] vertices = {
+                new (-lenght/2, 0f, 0f),  // Левый нижний
+                new (lenght/2, 0f, 0f),    // Правый нижний
+                new (-lenght/2, height, 0f) // Левый верхний
+            };
+
+            Face face = new Face(new int[] { 0, 1, 2 });
+            ProBuilderMesh mesh = ProBuilderMesh.Create(vertices, new[] { face });
+    
             
-            // если угол кровли ( houseParam.Roof.Angle) равен 0 . создаем плоскость в нулевых координах на высоте houseParam.HouseHeight + 0.01,  
-            // в размерах  houseParam.HouseLength + Constants.ROOF_OVERHANG по оси Z,
-            // houseParam.HouseWidth + Constants.ROOF_OVERHANG по оси X;
-            // окрашиваем плоскость в цвет Constants.ROOF_COLOR
-            // назнаем объекту ему parent = parent;
-            // возвращаем объект
-            
-            // если угол кровли больше 0. создаем Треугольную призму.
-            // Основание которой это равнобедренный треугольник,
-            // угол между ребром и основанием  houseParam.Roof.Angle
-            // Длина основания houseParam.HouseWidth + Constants.ROOF_OVERHANG + Constants.ROOF_OVERHANG
-            // Основание треугольника находится на высоте houseParam.HouseHeight + 0.01
-            // а так же по оси Z в координате (houseParam.HouseLength / 2 ) + Constants.ROOF_OVERHANG
-            // второе основание призмы находится зеркально первому, относительно нулевых координат
-            // Завершаем создание призмы соединяя основания и красим ее в цвет Constants.ROOF_COLOR
-            
-            // назнаем объекту ему parent = parent;
-            // возвращаем объект
-            
-            return null;
+            // Автоматическая генерация UV
+            mesh.unwrapParameters = new UnwrapParameters()
+            {
+                angleError = 0.1f,
+                areaError = 0.1f
+            };
+    
+            mesh.ToMesh();
+            mesh.Refresh();
+            return mesh;
+        }
+        
+        private GameObject FinalizeRoof(ProBuilderMesh mesh)
+        {
+            // Применяем материал
+            Material roofMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            roofMaterial.color = Constants.ROOF_COLOR;
+            mesh.GetComponent<MeshRenderer>().material = roofMaterial;
+
+            // Назначаем родителя
+            if (parent != null)
+            {
+                mesh.transform.SetParent(parent, false);
+            }
+
+            // Конвертируем в обычный GameObject
+            GameObject roofObject = mesh.gameObject;
+            roofObject.name = "Roof";
+            Object.DestroyImmediate(mesh);
+
+            return roofObject;
+        }
+
+        private void Extrude(ProBuilderMesh mesh, IEnumerable<Face> faces, ExtrudeMethod method, float distance)
+        {
+            mesh.Extrude(faces, method, distance);
+            mesh.ToMesh();
+            mesh.Refresh();
         }
     }
 }
