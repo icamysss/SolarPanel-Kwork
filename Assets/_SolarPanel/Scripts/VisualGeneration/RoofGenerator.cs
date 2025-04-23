@@ -52,7 +52,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
             // Рассчитываем параметры
             var triangleBaseLength = houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2 ;
             var roofLength = houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
-            var triangleHeight = (triangleBaseLength / 2) * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
+            var triangleHeight = triangleBaseLength * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
            
             // Создаем меш треугольника по центру
             var triangle = CreateTriangle(triangleBaseLength, triangleHeight);

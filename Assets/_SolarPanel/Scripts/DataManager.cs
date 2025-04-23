@@ -111,6 +111,18 @@ namespace _SolarPanel.Scripts
         {
            return _panelsCache.Keys;
         }
+
+        public object GetAverageOptimalAngle()
+        {
+            if (SelectedCity == null) return 0;
+            float sum = 0;
+           
+            foreach (var month in SelectedCity.MonthlyData)
+            {
+                sum += month.OptimalTilt;
+            }
+            return sum / SelectedCity.MonthlyData.Count;
+        }
     }
 
     [Serializable]

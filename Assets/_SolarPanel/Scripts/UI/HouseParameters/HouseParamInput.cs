@@ -105,9 +105,10 @@ namespace _SolarPanel.Scripts.UI.HouseParameters
         {
             var selectedCityName = cityDropdown.options[index].text;
             DataManager.Instance.SelectCity(selectedCityName);
-
-            // Пример: Вывести среднюю инсоляцию
+            
             var insolation = DataManager.Instance.GetCityAverageInsolation();
+            var angle = DataManager.Instance.GetAverageOptimalAngle();
+            Debug.Log($"Средний угол: {angle} град");
             Debug.Log($"Средняя инсоляция: {insolation} кВт·ч/м²");
         }
         
