@@ -5,25 +5,74 @@ namespace _SolarPanel.Scripts.VisualGeneration
 {
     public class RoofGenerator
     {
-        public void GenerateRoof(GameObject house, float length, float width, RoofType roofType) {
-            // Основные параметры дома
-            var houseScale = house.transform.localScale;
-            var roofOverhang = 0.5f; // Выступ крыши
+        private readonly HouseParam houseParam;
+        private readonly Transform parent;
 
-            // Свесы по бокам (4 куба)
-            CreateRoofPart(house, new Vector3(0, houseScale.y / 2, 0), new Vector3(houseScale.x + 2 * roofOverhang, 0.1f, roofOverhang));
-            CreateRoofPart(house, new Vector3(0, houseScale.y / 2, 0), new Vector3(houseScale.x + 2 * roofOverhang, 0.1f, roofOverhang), Quaternion.Euler(0, 180, 0));
-            CreateRoofPart(house, new Vector3(0, houseScale.y / 2, 0), new Vector3(roofOverhang, 0.1f, houseScale.z + 2 * roofOverhang));
-            CreateRoofPart(house, new Vector3(0, houseScale.y / 2, 0), new Vector3(roofOverhang, 0.1f, houseScale.z + 2 * roofOverhang), Quaternion.Euler(0, 180, 0));
+        public RoofGenerator(HouseParam houseParam, Transform parent = null)
+        {
+            this.houseParam = houseParam;
+            this.parent = parent;
         }
 
-        private void CreateRoofPart(GameObject parent, Vector3 position, Vector3 scale, Quaternion rotation = default) {
-            GameObject roofPart = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            roofPart.transform.parent = parent.transform;
-            roofPart.transform.localPosition = position;
-            roofPart.transform.localScale = scale;
-            roofPart.transform.rotation = rotation;
-            roofPart.name = "RoofPart";
+
+        public GameObject GenerateRoof()
+        {
+            if (houseParam.Roof.RoofType == RoofType.Односкатная)  return GenerateSingleRoof();
+            if (houseParam.Roof.RoofType == RoofType.Двухскатная)  return GenerateDoubleRoof();
+            return null;
+        }
+
+        private GameObject GenerateSingleRoof()
+        {
+            // при помощи Probuilder api создаем объект 
+            
+            // если угол кровли ( houseParam.Roof.Angle) равен 0 . создаем плоскость в нулевых координах на высоте houseParam.HouseHeight + 0.01,  
+            // в размерах  houseParam.HouseLength + Constants.ROOF_OVERHANG по оси Z,
+            // houseParam.HouseWidth + Constants.ROOF_OVERHANG по оси X;
+            // окрашиваем плоскость в цвет Constants.ROOF_COLOR
+            // назнаем объекту ему parent = parent;
+            // возвращаем объект
+            
+            // если угол кровли больше 0. создаем Треугольную призму.
+            // Основание которой это прямоугольный треугольник,
+            // угол между гипотенузой и основанием  houseParam.Roof.Angle
+            // Длина основания houseParam.HouseWidth + Constants.ROOF_OVERHANG + Constants.ROOF_OVERHANG
+            // Основание треугольника находится на высоте houseParam.HouseHeight + 0.01
+            // а так же по оси Z в координате (houseParam.HouseLength / 2 ) + Constants.ROOF_OVERHANG
+            // второе основание призмы находится зеркально первому, относительно нулевых координат
+            // Завершаем создание призмы соединяя основания выше и красим ее в цвет Constants.ROOF_COLOR
+            
+            // назнаем объекту ему parent = parent;
+            // возвращаем объект
+            
+            return null;
+           
+        }
+
+        private GameObject GenerateDoubleRoof()
+        {
+            // при помощи Probuilder api создаем объект 
+            
+            // если угол кровли ( houseParam.Roof.Angle) равен 0 . создаем плоскость в нулевых координах на высоте houseParam.HouseHeight + 0.01,  
+            // в размерах  houseParam.HouseLength + Constants.ROOF_OVERHANG по оси Z,
+            // houseParam.HouseWidth + Constants.ROOF_OVERHANG по оси X;
+            // окрашиваем плоскость в цвет Constants.ROOF_COLOR
+            // назнаем объекту ему parent = parent;
+            // возвращаем объект
+            
+            // если угол кровли больше 0. создаем Треугольную призму.
+            // Основание которой это равнобедренный треугольник,
+            // угол между ребром и основанием  houseParam.Roof.Angle
+            // Длина основания houseParam.HouseWidth + Constants.ROOF_OVERHANG + Constants.ROOF_OVERHANG
+            // Основание треугольника находится на высоте houseParam.HouseHeight + 0.01
+            // а так же по оси Z в координате (houseParam.HouseLength / 2 ) + Constants.ROOF_OVERHANG
+            // второе основание призмы находится зеркально первому, относительно нулевых координат
+            // Завершаем создание призмы соединяя основания и красим ее в цвет Constants.ROOF_COLOR
+            
+            // назнаем объекту ему parent = parent;
+            // возвращаем объект
+            
+            return null;
         }
     }
 }

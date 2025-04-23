@@ -15,7 +15,7 @@ namespace _SolarPanel.Scripts
         public const string CALCULATION_RESULT_HEADER = "Выбор солнечных панелей";
         public const string VISUALIZATION_HEADER = "Визуализация";
 
-        public const float PANELS_KPD = 0.2f;                   // кпд
+        public const float PANELS_KPD = 0.2f;                   // кпд панелей для формулы
       
         /// <summary>
         /// зазор между панелями, рядами
@@ -33,5 +33,10 @@ namespace _SolarPanel.Scripts
         /// Свес кровли
         /// </summary>
         public const float ROOF_OVERHANG = 0.5f;                 // Свес кровли
+        public const float HOUSE_HEIGHT = 3f;                     //высота дома
+
+        public static readonly Color32 HOUSE_COLOR = new Color32(216,216,79,255);
+        public static readonly Color32 ROOF_COLOR = new Color32(160, 100, 62, 255);
+        public static readonly Color32 PANELS_COLOR = new Color32(50, 45, 40, 255);
     }
 }

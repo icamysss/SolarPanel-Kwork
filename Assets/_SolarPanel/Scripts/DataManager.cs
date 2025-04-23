@@ -55,6 +55,8 @@ namespace _SolarPanel.Scripts
             {
                 _panelsCache[panel.PanelName] = panel;
             }
+
+            HouseParam.HouseHeight = Constants.HOUSE_HEIGHT;
         }
 
         // Методы для работы с данными
@@ -114,8 +116,9 @@ namespace _SolarPanel.Scripts
     [Serializable]
     public class HouseParam
     {
-        public float HouseLength { get; set; } = 9000;
-        public float HouseWidth { get; set; } = 7000;
+        public float HouseLength { get; set; } = 9f;
+        public float HouseWidth { get; set; } = 7f;
+        public float HouseHeight { get; set; } = 3f;
         public RoofParam Roof { get; set; } = new();
     }
 

@@ -3,46 +3,48 @@ using _SolarPanel.Scripts.VisualGeneration;
 using UnityEngine;
 
 namespace _SolarPanel.Scripts
-{
+{ // ДЛИНА ПО ОСИ Z ШИРИНА ПО ОСИ X
+
     public class VisualizationManager : MonoBehaviour
     {
         public static VisualizationManager Instance;
 
-        private HouseGenerator _houseGenerator;
-        private RoofGenerator _roofGenerator;
-        private PanelPlacer _panelPlacer;
-
-        private float length;
-        private float width;
+        private HouseParam houseParam;
         private SolarPanel panel;
         private int panelCount;
 
+        private GameObject roof;
+        private GameObject house;
+        private GameObject panels;
 
         private void Awake()
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
             DontDestroyOnLoad(gameObject);
-
-            _houseGenerator = new HouseGenerator();
-            _roofGenerator = new RoofGenerator();
-            _panelPlacer = new PanelPlacer();
         }
 
         public void Generate()
         {
             GetData();
-            // Генерация
-            var house = _houseGenerator.GenerateHouse(length, width, 3f); // Высота = 3 м
-            _roofGenerator.GenerateRoof(house, length, width, DataManager.Instance.HouseParam.Roof.RoofType);
-            _panelPlacer.PlacePanels(house, panel, panelCount);
+            // Дом
+            Destroy(house);
+            var houseGenerator = new HouseGenerator(houseParam, transform);
+            house = houseGenerator.GenerateHouse();
+            // кровля
+            Destroy(roof);
+            var roofGenerator = new RoofGenerator(houseParam, transform);
+            roof = roofGenerator.GenerateRoof();
+            // Панели
+            Destroy(panels);
+            var panelPlacer = new PanelPlacer(houseParam, panel, panelCount);
+            panels = panelPlacer.Place();
         }
 
         private void GetData()
         {
             // Получение данных из DataManager
-            length = DataManager.Instance.HouseParam.HouseLength;
-            width = DataManager.Instance.HouseParam.HouseWidth;
+            houseParam = DataManager.Instance.HouseParam;
             panel = DataManager.Instance.SelectedPanel;
             panelCount = DataManager.Instance.GetPanelCount();
         }
