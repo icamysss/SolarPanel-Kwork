@@ -32,7 +32,7 @@ namespace _SolarPanel.Scripts
         /// <summary>
         /// Свес кровли
         /// </summary>
-        public const float ROOF_OVERHANG = 0.5f;                 // Свес кровли
+        public const float ROOF_OVERHANG = 0.25f;                 // Свес кровли
         public const float HOUSE_HEIGHT = 3f;                     //высота дома
 
         public static readonly Color32 HOUSE_COLOR = new Color32(216,216,79,255);

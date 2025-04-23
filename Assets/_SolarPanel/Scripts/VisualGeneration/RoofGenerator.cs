@@ -48,25 +48,21 @@ namespace _SolarPanel.Scripts.VisualGeneration
             }
 
             // Рассчитываем параметры
-            float baseWidth = houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
-            float fullLength = houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2;
-            float triangleHeight = (baseWidth / 2) * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
+            var triangleBaseLenght = houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2 ;
+            var roofLength = houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
+            var triangleHeight = (triangleBaseLenght / 2) * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
 
             // Создаем прямоугольный треугольник
-            ProBuilderMesh triangle = CreateRightTriangle(baseWidth, triangleHeight);
+            var triangle = CreateRightTriangle(triangleBaseLenght, triangleHeight);
 
-            // Экструдируем треугольник вдоль оси Z
-           // Extrude(triangle, triangle.faces, ExtrudeMethod.FaceNormal, fullLength);
+            Extrude(triangle, new List<Face> { triangle.faces[0] }, ExtrudeMethod.IndividualFaces, roofLength );
 
-            // Позиционируем и поворачиваем
             triangle.transform.position = new Vector3(
                 0f,
-                houseParam.HouseHeight + 0.01f + triangleHeight / 2,
-                0f
+                houseParam.HouseHeight + 0.01f,
+                -roofLength/2f
                 );
-
-           
-
+            
             return FinalizeRoof(triangle);
         }
 
@@ -87,38 +83,41 @@ namespace _SolarPanel.Scripts.VisualGeneration
                 // Создаем треугольник основания
 
                 var triangle = ShapeGenerator.GeneratePrism(PivotLocation.Center,
-                    new Vector3(baseWidth, height, fullLength)); //CreateRightTriangle(baseWidth, height);
+                    new Vector3(baseWidth, height, fullLength));
+              
                 // Позиционируем и дублируем для симметрии
                 var roof = FinalizeRoof(triangle);
-                roof.transform.localPosition = new Vector3(0, houseParam.HouseHeight + height/2, 0);
+                roof.transform.localPosition = new Vector3(0, houseParam.HouseHeight + height / 2, 0);
 
                 return roof;
             }
         }
-        private ProBuilderMesh CreateRightTriangle(float lenght, float height)
+
+        private ProBuilderMesh CreateRightTriangle(float baseLenght, float height)
         {
-            Vector3[] vertices = {
-                new (-lenght/2, 0f, 0f),  // Левый нижний
-                new (lenght/2, 0f, 0f),    // Правый нижний
-                new (-lenght/2, height, 0f) // Левый верхний
+            Vector3[] vertices =
+            {
+                new(-baseLenght / 2, 0f, 0f), // Левый нижний
+                new(baseLenght / 2, 0f, 0f), // Правый нижний
+                new(-baseLenght / 2, height, 0f) // Левый верхний
             };
 
-            Face face = new Face(new int[] { 0, 1, 2 });
-            ProBuilderMesh mesh = ProBuilderMesh.Create(vertices, new[] { face });
-    
-            
+            var face = new Face(new int[] { 0, 1, 2 });
+            var mesh = ProBuilderMesh.Create(vertices, new[] { face });
+
+
             // Автоматическая генерация UV
             mesh.unwrapParameters = new UnwrapParameters()
             {
                 angleError = 0.1f,
                 areaError = 0.1f
             };
-    
+
             mesh.ToMesh();
             mesh.Refresh();
             return mesh;
         }
-        
+
         private GameObject FinalizeRoof(ProBuilderMesh mesh)
         {
             // Применяем материал

@@ -43,10 +43,10 @@ namespace _SolarPanel.Scripts.UI.HouseParameters
         
         private void InitHouseParam()
         {
-            lengthHouse.onEndEdit.Invoke(7.5f.ToString());
-            lengthHouse.text = 7.5f.ToString();
-            widthHouse.onEndEdit.Invoke(9.5f.ToString());
-            widthHouse.text = 9.5f.ToString();
+            lengthHouse.onEndEdit.Invoke(9.5f.ToString());
+            lengthHouse.text = 9.5f.ToString();
+            widthHouse.onEndEdit.Invoke(5.5f.ToString());
+            widthHouse.text = 5.5f.ToString();
         }
 
         private void InitRoofDropdown()
