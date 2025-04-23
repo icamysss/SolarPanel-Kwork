@@ -43,7 +43,7 @@ namespace _SolarPanel.Scripts.UI.CalculationResults
             Debug.Log($"Выбрана панель: {DataManager.Instance.SelectedPanel.PanelName}");
         }
 
-        private void UpdateSelectedPanelText()
+        public void UpdateSelectedPanelText()
         {
             selectedPanel.text = $"Необходимое кол-во панелей: \n {DataManager.Instance.GetPanelCount()} шт.";
         }

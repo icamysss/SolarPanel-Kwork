@@ -16,6 +16,7 @@ namespace _SolarPanel.Scripts.SM.States
             
             ShowUI();
             uiManager.results.UpdateRequiredPowerText(DataManager.Instance.CalculateRequiredPower());
+            uiManager.results.UpdateSelectedPanelText();
         }
 
         public override void Exit()

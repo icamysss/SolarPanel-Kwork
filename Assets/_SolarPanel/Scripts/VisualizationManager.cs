@@ -3,8 +3,8 @@ using _SolarPanel.Scripts.VisualGeneration;
 using UnityEngine;
 
 namespace _SolarPanel.Scripts
-{ // ДЛИНА ПО ОСИ Z ШИРИНА ПО ОСИ X
-
+{ 
+    // ДЛИНА ПО ОСИ Z ШИРИНА ПО ОСИ X
     public class VisualizationManager : MonoBehaviour
     {
         public static VisualizationManager Instance;

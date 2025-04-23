@@ -112,8 +112,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
             var face = new Face(new[] { 0, 1, 2 });
             if (inverse) face.Reverse();
             var mesh = ProBuilderMesh.Create(vertices, new[] { face });
-
-
+            
             // Автоматическая генерация UV
             mesh.unwrapParameters = new UnwrapParameters()
             {
