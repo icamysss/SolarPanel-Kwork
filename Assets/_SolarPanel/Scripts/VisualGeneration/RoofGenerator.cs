@@ -48,24 +48,24 @@ namespace _SolarPanel.Scripts.VisualGeneration
             }
 
             // Рассчитываем параметры
-            var triangleBaseLenght = houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2 ;
+            var triangleBaseLength = houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2 ;
             var roofLength = houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
-            var triangleHeight = (triangleBaseLenght / 2) * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
+            var triangleHeight = (triangleBaseLength / 2) * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
+            
+            // Создаем прямоугольный треугольник и экструдируем
+            var triangle = CreateRightTriangle(triangleBaseLength, triangleHeight);
+            ExtrudeWithFrontons(triangle, roofLength);
 
-            // Создаем прямоугольный треугольник
-            var triangle = CreateRightTriangle(triangleBaseLenght, triangleHeight);
-
-            Extrude(triangle, new List<Face> { triangle.faces[0] }, ExtrudeMethod.IndividualFaces, roofLength );
-
+            // Позиционируем
             triangle.transform.position = new Vector3(
                 0f,
                 houseParam.HouseHeight + 0.01f,
-                -roofLength/2f
+                -roofLength / 2f
                 );
-            
+
             return FinalizeRoof(triangle);
         }
-
+        
         private GameObject GenerateDoubleRoof()
         {
             if (houseParam.Roof.Angle == 0f)
@@ -102,7 +102,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
                 new(-baseLenght / 2, height, 0f) // Левый верхний
             };
 
-            var face = new Face(new int[] { 0, 1, 2 });
+            var face = new Face(new[] { 0, 1, 2 });
             var mesh = ProBuilderMesh.Create(vertices, new[] { face });
 
 
@@ -118,6 +118,57 @@ namespace _SolarPanel.Scripts.VisualGeneration
             return mesh;
         }
 
+        private void ExtrudeWithFrontons(ProBuilderMesh mesh, float length)
+        {
+            // Используем метод экструзии без ExtrudeOptions
+            mesh.Extrude(
+                new List<Face> { mesh.faces[0] },
+                ExtrudeMethod.FaceNormal,
+                length
+                );
+
+            CloseFronton(mesh, true);
+            CloseFronton(mesh, false);
+
+            // Генерируем UV через стандартный метод
+           // mesh.GenerateUV();
+            mesh.Refresh();
+            mesh.ToMesh();
+        }
+
+        private void CloseFronton(ProBuilderMesh mesh, bool isFront)
+        {
+            Bounds bounds = mesh.GetComponent<MeshFilter>().sharedMesh.bounds;
+            float targetZ = isFront ? bounds.min.z : bounds.max.z;
+
+            List<int> frontonVertices = new List<int>();
+
+            // Получаем вершины через индексы
+            for (int i = 0; i < mesh.vertexCount; i++)
+            {
+                Vector3 pos = mesh.positions[i];
+                if (Mathf.Abs(pos.z - targetZ) < 0.001f)
+                {
+                    frontonVertices.Add(i);
+                }
+            }
+
+            if (frontonVertices.Count == 3)
+            {
+                // Правильный порядок вершин для нормалей
+                Face frontonFace = new Face(new int[] {
+                    frontonVertices[0],
+                    frontonVertices[2],
+                    frontonVertices[1]
+                });
+                mesh.faces.Add(frontonFace);
+            }
+
+            mesh.ToMesh();
+            mesh.Refresh();
+            mesh.GetComponent<MeshFilter>().sharedMesh.RecalculateNormals();
+        }
+        
         private GameObject FinalizeRoof(ProBuilderMesh mesh)
         {
             // Применяем материал
