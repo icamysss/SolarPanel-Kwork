@@ -37,7 +37,7 @@ namespace _SolarPanel.Scripts
             roof = roofGenerator.GenerateRoof();
             // Панели
             Destroy(panels);
-            var panelPlacer = new PanelPlacer(houseParam, panel, panelCount);
+            var panelPlacer = new PanelPlacer(transform);
             panels = panelPlacer.Place();
         }
 
@@ -46,7 +46,6 @@ namespace _SolarPanel.Scripts
             // Получение данных из DataManager
             houseParam = DataManager.Instance.HouseParam;
             panel = DataManager.Instance.SelectedPanel;
-            panelCount = DataManager.Instance.GetPanelCount();
         }
     }
 }

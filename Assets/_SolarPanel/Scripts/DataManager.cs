@@ -112,7 +112,7 @@ namespace _SolarPanel.Scripts
            return _panelsCache.Keys;
         }
 
-        public object GetAverageOptimalAngle()
+        public float GetAverageOptimalAngle()
         {
             if (SelectedCity == null) return 0;
             float sum = 0;

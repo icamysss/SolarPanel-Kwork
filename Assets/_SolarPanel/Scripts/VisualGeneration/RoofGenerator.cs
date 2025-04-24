@@ -64,12 +64,13 @@ namespace _SolarPanel.Scripts.VisualGeneration
             
             
             // ставим на место
-            triangle.transform.position = new Vector3(0f, houseParam.HouseHeight + 0.01f, 0f);
-            triangle2.transform.position = new Vector3(0f, houseParam.HouseHeight + 0.01f, 0f);
+            triangle.transform.position = new Vector3(0f, houseParam.HouseHeight, 0f);
+            triangle2.transform.position = new Vector3(0f, houseParam.HouseHeight, 0f);
             
             var roof = new GameObject("Roof");
             FinalizeRoof(triangle).transform.SetParent(roof.transform);
             FinalizeRoof(triangle2).transform.SetParent(roof.transform);
+            roof.transform.SetParent(parent);
             return roof;
         }
         
@@ -96,6 +97,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
                 var roof = FinalizeRoof(triangle);
                 roof.transform.localPosition = new Vector3(0, houseParam.HouseHeight + height / 2, 0);
 
+                roof.transform.SetParent(parent);
                 return roof;
             }
         }
