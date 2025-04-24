@@ -43,9 +43,9 @@ namespace _SolarPanel.Scripts.VisualGeneration
             if (!CheckSquarePanel()) return null;
     
             // расчитываем количество панелей в ряду и сколько рядом необходимо
-            int panelsPerRow = Mathf.FloorToInt((_availableRoofArea.y + Constants.PANELS_SPACING) /
+            var panelsPerRow = Mathf.FloorToInt((_availableRoofArea.y + Constants.PANELS_SPACING) /
                                                 (_panelSize.z + Constants.PANELS_SPACING));
-            int rowsCount = Mathf.CeilToInt((float)_panelCount / panelsPerRow);
+            var rowsCount = Mathf.CeilToInt((float)_panelCount / panelsPerRow);
             Debug.Log($"Необходимо рядов: {rowsCount}");
     
             // Список хранения рядов 
@@ -78,6 +78,11 @@ namespace _SolarPanel.Scripts.VisualGeneration
             var pCount = _panelCount;
             foreach (var row in rows)
             {
+                // высота для каждого ряда, выраженная через позицию по x
+                row.transform.position = new Vector3(
+                    row.transform.position.x,
+                    CalculateRowHeight(row.transform.position.x) , 
+                    row.transform.position.z);
                 // Определяем сколько панелей будет в этом ряду
                 int panelsInThisRow = Mathf.Min(panelsPerRow, pCount);
         
@@ -92,19 +97,36 @@ namespace _SolarPanel.Scripts.VisualGeneration
                 }
                 pCount -= panelsInThisRow;
             }
-    
+            
             // Все в контейнер и возвращаем
             var panelsRoot = new GameObject("SolarPanels");
             panelsRoot.transform.SetParent(_parent);
             foreach (var row in rows)
             {
+                // устанавливаем угол для каждого ряда
+                row.transform.localRotation = CalculateRowAngle();
                 row.SetParent(panelsRoot.transform);
             }
             return panelsRoot;
         }
 
+        
+        /// <param name="xPos"> Позиция по x</param>
+        /// <returns>высоту по координате Y</returns>
+        private float CalculateRowHeight(float xPos)
+        {
+            var y1 =( _panelSize.x / 2 * Mathf.Sin((_optimalAngle - _houseParam.Roof.Angle) * Mathf.Deg2Rad) 
+                      + Constants.PANELS_SPACE_FROM_ROOF) / Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad);
+            var y2 = (GetRoofWidth() / 2 * Mathf.Sin(_houseParam.Roof.Angle * Mathf.Deg2Rad)) 
+                     - (xPos -_startPoint.x ) * Mathf.Tan(_houseParam.Roof.Angle * Mathf.Deg2Rad);
+            
+            return y1 + y2 + _houseParam.HouseHeight;
+        }
 
-
+        private Quaternion CalculateRowAngle()
+        {
+            return Quaternion.Euler(0, 0, - _optimalAngle);
+        }
         /// <returns>false - если панели не влезут на кровлю</returns>
         private bool CheckSquarePanel()
         {
@@ -170,20 +192,21 @@ namespace _SolarPanel.Scripts.VisualGeneration
 
             var hypotenuse = GetRoofWidth() / 2;
             result.y = hypotenuse * Mathf.Sin(_houseParam.Roof.Angle * Mathf.Deg2Rad) + _houseParam.HouseHeight;
-
-            var single = hypotenuse * Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad) - result.y;
-            var halfDRoofSize = _houseParam.HouseWidth / 2 + Constants.ROOF_OVERHANG;
+            var halfRoofSize = _houseParam.HouseWidth / 2 + Constants.ROOF_OVERHANG;
+            
+            var singleX = halfRoofSize - hypotenuse * Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad);
             var xCentr = _houseParam.Roof.RoofType == RoofType.Односкатная
-                ? single
-                : halfDRoofSize - (hypotenuse * Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad));
+                ? singleX
+                : halfRoofSize - (hypotenuse * Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad));
 
             result.x = xCentr;
-
-            var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            obj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            obj.transform.position = result;
-            Debug.Log("сфера создана");
-            
+            // дебаг 
+            var debugSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debugSphere.transform.localScale = Vector3.one * 0.2f;
+            debugSphere.transform.position = result;
+            debugSphere.GetComponent<Renderer>().material.color = Color.red;
+            Object.Destroy(debugSphere, 5f); // Автоматическое удаление через 5 секунд
+            // дебаг
             Debug.Log($"Стартовая позиция: {result}");
             return result;
         }
