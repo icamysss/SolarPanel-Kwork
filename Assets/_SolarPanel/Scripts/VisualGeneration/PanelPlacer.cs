@@ -52,6 +52,8 @@ namespace _SolarPanel.Scripts.VisualGeneration
             var rows = new List<Transform>();
             // Создаем родителей для рядов с симметричным расположением
             var rowSpacing = _panelSize.x + Constants.PANELS_SPACING;
+            // делаем проекцию rowSpacing на ось X
+            rowSpacing *= Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad);
             
             var isEvenRows = rowsCount % 2 == 0;
             for (var i = 0; i < rowsCount; i++)
@@ -109,7 +111,6 @@ namespace _SolarPanel.Scripts.VisualGeneration
             }
             return panelsRoot;
         }
-
         
         /// <param name="xPos"> Позиция по x</param>
         /// <returns>высоту по координате Y</returns>
@@ -146,6 +147,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
         {
             return Quaternion.Euler(0, 0, - _optimalAngle);
         }
+        
         /// <returns>false - если панели не влезут на кровлю</returns>
         private bool CheckSquarePanel()
         {
