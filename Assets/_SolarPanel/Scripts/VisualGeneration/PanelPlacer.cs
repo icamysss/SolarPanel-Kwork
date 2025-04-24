@@ -41,47 +41,45 @@ namespace _SolarPanel.Scripts.VisualGeneration
         public GameObject Place()
         {
             if (!CheckSquarePanel()) return null;
-            
+    
             // расчитываем количество панелей в ряду и сколько рядом необходимо
-            int panelsPerRow = Mathf.FloorToInt((_availableRoofArea.y+ Constants.PANELS_SPACING) /
+            int panelsPerRow = Mathf.FloorToInt((_availableRoofArea.y + Constants.PANELS_SPACING) /
                                                 (_panelSize.z + Constants.PANELS_SPACING));
             int rowsCount = Mathf.CeilToInt((float)_panelCount / panelsPerRow);
             Debug.Log($"Необходимо рядов: {rowsCount}");
-            
+    
             // Список хранения рядов 
             var rows = new List<Transform>();
-            
-            // Создаем родителей для рядов и размещаем их на кровле, первый ряд в центре кровли 
-            // потом один выше него другой ниже и так пока не разместим все ряды
+    
+            // Создаем родителей для рядов
             for (var i = 0; i < rowsCount; i++)
             {
                 var row = new GameObject($"row_{i}");
                 var rowSpacing = _panelSize.x + Constants.PANELS_SPACING;
-              
-                var rowPosition = new Vector3 ((i - (rowsCount - 1) * 0.5f) * rowSpacing, _startPoint.y, 0); 
+                var rowPosition = new Vector3((i - (rowsCount - 1) * 0.5f) * rowSpacing, _startPoint.y, 0); 
                 row.transform.position = rowPosition;
                 rows.Add(row.transform);
             }
 
-
             var pCount = _panelCount;
             foreach (var row in rows)
             {
-                // здесь мы для каждого ряда спавним панели, допиши реализацию
-                for (var panelIndex = 0; panelIndex < panelsPerRow; panelIndex++)
+                // Определяем сколько панелей будет в этом ряду
+                int panelsInThisRow = Mathf.Min(panelsPerRow, pCount);
+        
+                // Центрирование относительно фактического количества панелей
+                for (var panelIndex = 0; panelIndex < panelsInThisRow; panelIndex++)
                 {
-                    if (pCount <= 0) break;
-                    pCount--;
-                    // Позиция панели с центрированием
-                    var zPos = (panelIndex - (panelsPerRow - 1) * 0.5f) * (_panelSize.z + Constants.PANELS_SPACING);
+                    // Расчет позиции с центрированием
+                    float zPos = (panelIndex - (panelsInThisRow - 1) * 0.5f) * (_panelSize.z + Constants.PANELS_SPACING);
                     var panel = CreatePanel();
                     panel.transform.SetParent(row.transform);
                     panel.transform.localPosition = new Vector3(0, 0, zPos);
                 }
+                pCount -= panelsInThisRow;
             }
-           
-           
-            // все в контейнер и возвращаем
+    
+            // Все в контейнер и возвращаем
             var panelsRoot = new GameObject("SolarPanels");
             panelsRoot.transform.SetParent(_parent);
             foreach (var row in rows)
