@@ -115,12 +115,30 @@ namespace _SolarPanel.Scripts.VisualGeneration
         /// <returns>высоту по координате Y</returns>
         private float CalculateRowHeight(float xPos)
         {
-            var y1 =( _panelSize.x / 2 * Mathf.Sin((_optimalAngle - _houseParam.Roof.Angle) * Mathf.Deg2Rad) 
-                      + Constants.PANELS_SPACE_FROM_ROOF) / Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad);
-            var y2 = (GetRoofWidth() / 2 * Mathf.Sin(_houseParam.Roof.Angle * Mathf.Deg2Rad)) 
-                     - (xPos -_startPoint.x ) * Mathf.Tan(_houseParam.Roof.Angle * Mathf.Deg2Rad);
-            
-            return y1 + y2 + _houseParam.HouseHeight;
+            var panelNormal = 0f;
+            if (_optimalAngle >= _houseParam.Roof.Angle)
+            {
+                // Высота подъема панели от кровли (перпендикуляр от панели на крышу)
+                panelNormal = _panelSize.x / 2 *
+                              Mathf.Sin((_optimalAngle - _houseParam.Roof.Angle) * Mathf.Deg2Rad)
+                              + Constants.PANELS_SPACE_FROM_ROOF;
+            }
+            else
+            {
+                // Высота подъема панели от кровли (перпендикуляр от панели на крышу)
+                panelNormal = (_panelSize.x / 2) * Mathf.Sin(_houseParam.Roof.Angle * Mathf.Deg2Rad)
+                              + Constants.PANELS_SPACE_FROM_ROOF;
+            }
+
+
+            // Высота кровли в точке xPos
+            var roofHeightAtPos = (GetRoofWidth() / 2 * Mathf.Sin(_houseParam.Roof.Angle * Mathf.Deg2Rad))
+                                  - (xPos - _startPoint.x) * Mathf.Tan(_houseParam.Roof.Angle * Mathf.Deg2Rad);
+
+            // Расстояние от панели до кровли в точке xPos
+            var panelHeight = panelNormal / Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad);
+
+            return panelHeight + roofHeightAtPos + _houseParam.HouseHeight;
         }
 
         private Quaternion CalculateRowAngle()
