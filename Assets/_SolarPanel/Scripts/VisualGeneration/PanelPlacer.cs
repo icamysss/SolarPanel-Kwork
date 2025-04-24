@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _SolarPanel.Scripts.Data;
 using UnityEngine;
 using UnityEngine.ProBuilder;
@@ -40,30 +41,54 @@ namespace _SolarPanel.Scripts.VisualGeneration
         public GameObject Place()
         {
             if (!CheckSquarePanel()) return null;
+            
+            // расчитываем количество панелей в ряду и сколько рядом необходимо
+            int panelsPerRow = Mathf.FloorToInt((_availableRoofArea.y+ Constants.PANELS_SPACING) /
+                                                (_panelSize.z + Constants.PANELS_SPACING));
+            int rowsCount = Mathf.CeilToInt((float)_panelCount / panelsPerRow);
+            Debug.Log($"Необходимо рядов: {rowsCount}");
+            
+            // Список хранения рядов 
+            var rows = new List<Transform>();
+            
+            // Создаем родителей для рядов и размещаем их на кровле, первый ряд в центре кровли 
+            // потом один выше него другой ниже и так пока не разместим все ряды
+            for (var i = 0; i < rowsCount; i++)
+            {
+                var row = new GameObject($"row_{i}");
+                var rowSpacing = _panelSize.x + Constants.PANELS_SPACING;
+              
+                var rowPosition = new Vector3 ((i - (rowsCount - 1) * 0.5f) * rowSpacing, _startPoint.y, 0); 
+                row.transform.position = rowPosition;
+                rows.Add(row.transform);
+            }
 
-            
-            // определить кол - во рядов 
-                // если четное, то центр кровли будет между рядами
-                // если нечетно центр кровли будет по центру первого ряда
-                
-            // создать объект родитель для ряда
-                // разместить его относительно центра в зависимости от кол-ва рядов 
-                    // если четное кол - во рядов то первый ряд будет выше центра
-                    
-            // проверить угол установки (угол уст = угол опт - угол кровли) 
-                // если отрицательный то проверять зазор по верхней части
-                // если положительный то проверять зазор по нижней части панели
-          
-            // Создать ряд панелей
-                // переместить родительский объект на вычисленную высоту (вдоль перпендикуляра к кровле)
-                // повернуть родительский объект
-                // заспавнить панели симмитрично центру кровли
-            
-            // Создать остальные ряды
-            // на значить всем рядам родителя parent
-            // вернуть родителя
-            
-            return null; 
+
+            var pCount = _panelCount;
+            foreach (var row in rows)
+            {
+                // здесь мы для каждого ряда спавним панели, допиши реализацию
+                for (var panelIndex = 0; panelIndex < panelsPerRow; panelIndex++)
+                {
+                    if (pCount <= 0) break;
+                    pCount--;
+                    // Позиция панели с центрированием
+                    var zPos = (panelIndex - (panelsPerRow - 1) * 0.5f) * (_panelSize.z + Constants.PANELS_SPACING);
+                    var panel = CreatePanel();
+                    panel.transform.SetParent(row.transform);
+                    panel.transform.localPosition = new Vector3(0, 0, zPos);
+                }
+            }
+           
+           
+            // все в контейнер и возвращаем
+            var panelsRoot = new GameObject("SolarPanels");
+            panelsRoot.transform.SetParent(_parent);
+            foreach (var row in rows)
+            {
+                row.SetParent(panelsRoot.transform);
+            }
+            return panelsRoot;
         }
 
 
@@ -73,10 +98,10 @@ namespace _SolarPanel.Scripts.VisualGeneration
         {
             Debug.Log($"Длина панели: {_panelSize.z}, Ширина панели: {_panelSize.x}");
             // Расчёт количества панелей в ряду и рядов
-            var panelsPerRow = Mathf.FloorToInt((_availableRoofArea.x + Constants.PANELS_SPACING) /
+            var panelsPerRow = Mathf.FloorToInt((_availableRoofArea.y + Constants.PANELS_SPACING) /
                                                 (_panelSize.x + Constants.PANELS_SPACING));
-            var rows = Mathf.FloorToInt((_availableRoofArea.y + Constants.PANELS_SPACING) /
-                                        (_panelSize.y + Constants.PANELS_SPACING));
+            var rows = Mathf.FloorToInt((_availableRoofArea.x + Constants.PANELS_SPACING) /
+                                        (_panelSize.z + Constants.PANELS_SPACING));
 
             var maxPossible = panelsPerRow * rows;
             if (maxPossible < _panelCount)

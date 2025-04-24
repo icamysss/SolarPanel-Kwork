@@ -22,8 +22,8 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
         private void InitDailyConsumption()
         {
             dailyConsumption.onEndEdit.AddListener(OnDailyConsumptionEnter);
-            dailyConsumption.onEndEdit.Invoke(15f.ToString());
-            dailyConsumption.text = 15f.ToString();
+            dailyConsumption.onEndEdit.Invoke(100f.ToString());
+            dailyConsumption.text = 100f.ToString();
         }
         
         private void OnDailyConsumptionEnter(string value)
