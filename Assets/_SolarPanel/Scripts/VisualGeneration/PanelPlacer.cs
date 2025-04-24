@@ -50,13 +50,27 @@ namespace _SolarPanel.Scripts.VisualGeneration
     
             // Список хранения рядов 
             var rows = new List<Transform>();
-    
-            // Создаем родителей для рядов
+            // Создаем родителей для рядов с симметричным расположением
+            var rowSpacing = _panelSize.x + Constants.PANELS_SPACING;
+            
+            var isEvenRows = rowsCount % 2 == 0;
             for (var i = 0; i < rowsCount; i++)
             {
                 var row = new GameObject($"row_{i}");
-                var rowSpacing = _panelSize.x + Constants.PANELS_SPACING;
-                var rowPosition = new Vector3((i - (rowsCount - 1) * 0.5f) * rowSpacing, _startPoint.y, 0); 
+        
+                // Расчёт смещения для симметрии
+                float offset;
+                if (isEvenRows)
+                    offset = (i - rowsCount/2 + 0.5f) * rowSpacing;
+                else
+                    offset = (i - (rowsCount-1)/2) * rowSpacing;
+
+                var rowPosition = new Vector3(
+                    _startPoint.x + offset, 
+                    _startPoint.y, 
+                    0
+                    );
+
                 row.transform.position = rowPosition;
                 rows.Add(row.transform);
             }
@@ -145,6 +159,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            Debug.Log($"Ширина кровли: {result}");
             return result;
         }
 
@@ -157,13 +172,18 @@ namespace _SolarPanel.Scripts.VisualGeneration
             result.y = hypotenuse * Mathf.Sin(_houseParam.Roof.Angle * Mathf.Deg2Rad) + _houseParam.HouseHeight;
 
             var single = hypotenuse * Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad) - result.y;
-
+            var halfDRoofSize = _houseParam.HouseWidth / 2 + Constants.ROOF_OVERHANG;
             var xCentr = _houseParam.Roof.RoofType == RoofType.Односкатная
                 ? single
-                : (_houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2) / 4 - single;
+                : halfDRoofSize - (hypotenuse * Mathf.Cos(_houseParam.Roof.Angle * Mathf.Deg2Rad));
 
             result.x = xCentr;
 
+            var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            obj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            obj.transform.position = result;
+            Debug.Log("сфера создана");
+            
             Debug.Log($"Стартовая позиция: {result}");
             return result;
         }
