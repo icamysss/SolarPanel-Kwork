@@ -29,6 +29,12 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
             
         }
 
+        public override void Show(bool show = true)
+        {
+            base.Show(show);
+            ShowConsumptionMode(InputMode, !show);
+        }
+
         private void InitDailyConsumption()
         {
             InputMode = ConsumptionMode.InputDailyConsumption;
@@ -85,8 +91,14 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
             }
         }
 
-        private void ShowConsumptionMode(ConsumptionMode mode)
+        private void ShowConsumptionMode(ConsumptionMode mode, bool switchOff = false)
         {
+            if (switchOff)
+            {
+                dailyConsumption.gameObject.SetActive(false);
+                UIManager.Show(applianceSelecting, false);
+                return;
+            }
             if (mode == ConsumptionMode.SelectAppliance)
             {
                 dailyConsumption.gameObject.SetActive(false);

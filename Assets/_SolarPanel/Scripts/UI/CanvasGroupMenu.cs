@@ -11,7 +11,7 @@ namespace _SolarPanel.Scripts.UI
         {
             canvasGroup = GetComponent<CanvasGroup>();
         }
-        public void Show(bool show = true)
+        public virtual void Show(bool show = true)
         {
             UIManager.Show(canvasGroup, show);
         }
