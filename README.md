@@ -1,7 +1,7 @@
 # 🌞 Solar Panel Calculator & Visualizer 
 
 **Инструмент для расчёта и визуализации солнечных панелей на крыше дома.**  
-Разработан на Unity для Windows. [Демо](https://icamysss.github.io/SolarPanel-Kwork/) | [Документация](https://github.com/icamysss/SolarPanel-Kwork/tree/main/Technical%20specification)
+Разработан на Unity. [Демо](https://icamysss.github.io/SolarPanel-Kwork/) | [Документация](https://github.com/icamysss/SolarPanel-Kwork/tree/main/Technical%20specification)
 
 ---
 
