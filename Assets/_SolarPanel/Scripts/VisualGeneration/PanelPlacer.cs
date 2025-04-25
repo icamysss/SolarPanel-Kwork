@@ -25,7 +25,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
         private readonly float _optimalAngle; // Оптимальный угол относительно земли
         private readonly Vector2 _availableRoofArea;  // зона в которой можно разместить панели
 
-        public PanelPlacer(Transform parent = null)
+        public PanelPlacer(Transform parent, out Vector3 startPoint)
         {
             if (parent != null) _parent = parent;
             
@@ -35,6 +35,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
             _panelSize = new Vector3(_panel.Dimensions.x / 1000f, _panel.Dimensions.y / 1000f, _panel.Dimensions.z / 1000f);
             _optimalAngle = DataManager.Instance.GetAverageOptimalAngle();
             _startPoint = GetStartPosition();
+            startPoint = _startPoint;
             _availableRoofArea = GetUsefulRoofSize();
         }
 

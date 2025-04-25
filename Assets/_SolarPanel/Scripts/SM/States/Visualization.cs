@@ -1,4 +1,5 @@
 using _SolarPanel.Scripts.UI;
+using UnityEngine;
 
 namespace _SolarPanel.Scripts.SM.States
 {
@@ -16,6 +17,16 @@ namespace _SolarPanel.Scripts.SM.States
             base.Enter();
             ShowUI();
             VisualizationManager.Instance.Generate();
+            var cam = Object.FindFirstObjectByType<CameraController>();
+            if (cam != null)
+            {
+                var x = DataManager.Instance.HouseParam.HouseWidth + 2;
+                cam.MinRunTimeDistance = DataManager.Instance.HouseParam.HouseWidth / 2;
+                cam.SetXPosition(x);
+                cam.LookPoint = VisualizationManager.Instance.StartPosition;
+               //cam.gameObject.transform.position = VisualizationManager.Instance.StartPosition;
+            }
+           
         }
 
         public override void Exit()
@@ -26,6 +37,7 @@ namespace _SolarPanel.Scripts.SM.States
         
         private void ShowUI(bool show = true)
         {
+            uiManager.visualizationUI.UpdateText();
             uiManager.visualizationUI.Show(show);
             uiManager.navigation.Show(show);
             
@@ -35,7 +47,7 @@ namespace _SolarPanel.Scripts.SM.States
             uiManager.navigation.ShowButton(ButtonType.previous, show);
             uiManager.navigation.SetButtonText(ButtonType.previous, Constants.BACK_BUTTON_TEXT);
             
-            uiManager.navigation.SetHeader(Constants.VISUALIZATION_HEADER);
+            uiManager.navigation.SetHeader(DataManager.Instance.SelectedPanel.PanelName);
         }
     }
 }

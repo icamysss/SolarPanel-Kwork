@@ -35,8 +35,7 @@ namespace _SolarPanel.Scripts.UI
          
          DataManager.Instance.CalculateRequiredPower();
          results.Initialize();
-
-         
+         visualizationUI.Initialize();
       }
 
       public static void Show(CanvasGroup canvasGroup, bool show = true)

@@ -16,6 +16,8 @@ namespace _SolarPanel.Scripts
         private GameObject roof;
         private GameObject house;
         private GameObject panels;
+        
+        public Vector3 StartPosition;
 
         private void Awake()
         {
@@ -37,7 +39,7 @@ namespace _SolarPanel.Scripts
             roof = roofGenerator.GenerateRoof();
             // Панели
             Destroy(panels);
-            var panelPlacer = new PanelPlacer(transform);
+            var panelPlacer = new PanelPlacer(transform, out StartPosition );
             panels = panelPlacer.Place();
         }
 
