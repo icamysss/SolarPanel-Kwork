@@ -89,4 +89,4 @@
 --- 
 
 Разработано с ❤️ для эффективного использования солнечной энергии.  
-[Я на kKwork](https://kwork.ru/user/icamys) | [Связаться со мной](https://t.me/icamysss)
+[Я на Kwork](https://kwork.ru/user/icamys) | [Связаться со мной](https://t.me/icamysss)
