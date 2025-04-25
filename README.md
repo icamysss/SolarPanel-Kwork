@@ -89,4 +89,4 @@
 --- 
 
 Разработано с ❤️ для эффективного использования солнечной энергии.  
-[Мой GitHub](https://github.com/icamysss) | [Связаться со мной](mailto:your-email@example.com)
+[Я на kKwork](https://kwork.ru/user/icamys) | [Связаться со мной](https://t.me/icamysss)
