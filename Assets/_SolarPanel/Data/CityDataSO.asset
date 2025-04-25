@@ -127,7 +127,7 @@ MonoBehaviour:
     - MonthName: 11
       Insolation: 1.81
       OptimalTilt: 74
-  - Name: "\u042F\u043A\u0443\u0442\u0438\u044F"
+  - Name: "\u042F\u043A\u0443\u0442\u0441\u043A"
     MonthlyData:
     - MonthName: 0
       Insolation: 1.65
