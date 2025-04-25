@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b674daf1a8514152a032c6a6602f3b75, type: 3}
+  m_Name: ApplianceDataSO
+  m_EditorClassIdentifier: 
+  Appliances:
+  - Name: "\u041B\u0430\u043C\u043F\u0430 \u043D\u0430\u043A\u0430\u043B\u0438\u0432\u0430\u043D\u0438\u044F"
+    Power: 60
+    WorkTime: 4
+    DailyConsumption: 0.24
+  - Name: "LED-\u043B\u0430\u043C\u043F\u0430"
+    Power: 10
+    WorkTime: 4
+    DailyConsumption: 0.04
+  - Name: "\u041D\u043E\u0447\u043D\u0438\u043A"
+    Power: 5
+    WorkTime: 8
+    DailyConsumption: 0.04
+  - Name: "\u0422\u0435\u043B\u0435\u0432\u0438\u0437\u043E\u0440"
+    Power: 100
+    WorkTime: 4
+    DailyConsumption: 0.4
+  - Name: "\u0425\u043E\u043B\u043E\u0434\u0438\u043B\u044C\u043D\u0438\u043A"
+    Power: 150
+    WorkTime: 24
+    DailyConsumption: 3.6
+  - Name: "\u041C\u0438\u043A\u0440\u043E\u0432\u043E\u043B\u043D\u043E\u0432\u043A\u0430"
+    Power: 1000
+    WorkTime: 0.5
+    DailyConsumption: 0.5
+  - Name: "\u041F\u044B\u043B\u0435\u0441\u043E\u0441"
+    Power: 1000
+    WorkTime: 0.2
+    DailyConsumption: 0.2
+  - Name: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u0447\u0430\u0439\u043D\u0438\u043A"
+    Power: 2000
+    WorkTime: 0.1
+    DailyConsumption: 0.2
+  - Name: "\u0421\u0442\u0438\u0440\u0430\u043B\u044C\u043D\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u0430"
+    Power: 1500
+    WorkTime: 1
+    DailyConsumption: 1.5
+  - Name: "\u041F\u043E\u0441\u0443\u0434\u043E\u043C\u043E\u0435\u0447\u043D\u0430\u044F
+      \u043C\u0430\u0448\u0438\u043D\u0430 "
+    Power: 1200
+    WorkTime: 1
+    DailyConsumption: 1.2
+  - Name: "\u041A\u043E\u043D\u0434\u0438\u0446\u0438\u043E\u043D\u0435\u0440"
+    Power: 1000
+    WorkTime: 4
+    DailyConsumption: 4
+  - Name: "\u0412\u0435\u043D\u0442\u0438\u043B\u044F\u0442\u043E\u0440 "
+    Power: 50
+    WorkTime: 6
+    DailyConsumption: 0.3
+  - Name: "\u042D\u043B\u0435\u043A\u0442\u0440\u043E\u043F\u043B\u0438\u0442\u0430"
+    Power: 2000
+    WorkTime: 1
+    DailyConsumption: 2
+  - Name: "\u0414\u0443\u0445\u043E\u0432\u043A\u0430"
+    Power: 2000
+    WorkTime: 0.5
+    DailyConsumption: 1
+  - Name: "\u041C\u0443\u043B\u044C\u0442\u0438\u0432\u0430\u0440\u043A\u0430"
+    Power: 800
+    WorkTime: 0.5
+    DailyConsumption: 0.4
+  - Name: "\u041D\u043E\u0443\u0442\u0431\u0443\u043A"
+    Power: 60
+    WorkTime: 4
+    DailyConsumption: 0.24
+  - Name: "\u041F\u041A"
+    Power: 300
+    WorkTime: 4
+    DailyConsumption: 1.2
+  - Name: "\u041C\u043E\u043D\u0438\u0442\u043E\u0440"
+    Power: 50
+    WorkTime: 6
+    DailyConsumption: 0.3
+  - Name: "\u0420\u043E\u0443\u0442\u0435\u0440"
+    Power: 10
+    WorkTime: 24
+    DailyConsumption: 0.24
+  - Name: "\u041F\u0440\u0438\u0441\u0442\u0430\u0432\u043A\u0430"
+    Power: 100
+    WorkTime: 2
+    DailyConsumption: 0.2
+  - Name: "\u0417\u0430\u0440\u044F\u0434\u043D\u043E\u0435 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u043E"
+    Power: 10
+    WorkTime: 2
+    DailyConsumption: 0.02
+  - Name: "\u042D\u043B\u0435\u043A\u0442\u0440\u0438\u0447\u0435\u0441\u043A\u0438\u0439
+      \u0432\u043E\u0434\u043E\u043D\u0430\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043B\u044C"
+    Power: 2000
+    WorkTime: 2
+    DailyConsumption: 4
+  - Name: "\u042D\u043B\u0435\u043A\u0442\u0440\u0438\u0447\u0435\u0441\u043A\u0438\u0439
+      \u043A\u043E\u0442\u0435\u043B"
+    Power: 3000
+    WorkTime: 3
+    DailyConsumption: 9
