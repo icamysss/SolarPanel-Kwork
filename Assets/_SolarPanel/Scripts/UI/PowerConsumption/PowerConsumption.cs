@@ -8,6 +8,8 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
     {
         [SerializeField] private TMP_InputField dailyConsumption;
 
+        private ConsumptionMode _consumptionMode;
+        
         private void Start()
         {
             if (dailyConsumption == null) throw new NullReferenceException("PowerConsumption");
@@ -16,7 +18,8 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
         public override void Initialize()
         {
             base.Initialize();
-           InitDailyConsumption();
+            InitDailyConsumption();
+            InputMode = ConsumptionMode.InputDailyConsumption;
         }
 
         private void InitDailyConsumption()
@@ -35,5 +38,39 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
             }
             Debug.Log($"Суточное потребление: { DataManager.Instance.DailyConsumption}");
         }
+
+        public ConsumptionMode InputMode
+        {
+            get => _consumptionMode;
+            set
+            {
+                _consumptionMode = value;
+                ShowConsumptionMode(_consumptionMode);
+                DataManager.Instance.DailyConsumption = 0f;
+            }
+        }
+
+        private void ShowConsumptionMode(ConsumptionMode mode)
+        {
+            if (mode == ConsumptionMode.SelectAppliance)
+            {
+                dailyConsumption.gameObject.SetActive(false);
+            }
+            if (mode == ConsumptionMode.InputDailyConsumption)
+            {
+                dailyConsumption.gameObject.SetActive(true);
+            }
+        }
+
+        public void SwitchConsumptionMode()
+        {
+            InputMode = InputMode == ConsumptionMode.SelectAppliance ? 
+                ConsumptionMode.InputDailyConsumption : ConsumptionMode.SelectAppliance;
+        }
+    }
+
+    public enum ConsumptionMode
+    {
+        SelectAppliance, InputDailyConsumption,
     }
 }

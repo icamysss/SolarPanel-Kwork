@@ -14,6 +14,7 @@ namespace _SolarPanel.Scripts
         // ScriptableObjects с данными
         [SerializeField] private CityDataSO _cityDataSO;
         [SerializeField] private PanelDataSO _panelDataSO;
+        [SerializeField] private ApplianceDataSO _applianceDataSO;
 
         // Текущие данные, введённые пользователем
         
@@ -22,11 +23,16 @@ namespace _SolarPanel.Scripts
         public SolarPanel SelectedPanel { get; private set; }
         public float RequiredPower { get; set; }
         public float DailyConsumption { get; set; }
+        public List<SelectedAppliance> SelectedAppliances { get; private set; }
+
         
+        private List<SelectedAppliance> _selectedAppliances = new();
+
         // Кэшированные данные
         private Dictionary<string, City> _citiesCache;
         private Dictionary<string, SolarPanel> _panelsCache;
-
+        private Dictionary<string, Appliances> _appliancesCache;
+        
         private void Awake()
         {
             if (Instance == null)
@@ -56,6 +62,12 @@ namespace _SolarPanel.Scripts
                 _panelsCache[panel.PanelName] = panel;
             }
 
+            _appliancesCache = new Dictionary<string, Appliances>();
+            foreach (var appliance in _applianceDataSO.Appliances)
+            {
+                _appliancesCache[appliance.Name] = appliance;
+            }
+            
             HouseParam.HouseHeight = Constants.HOUSE_HEIGHT;
         }
 
@@ -75,7 +87,7 @@ namespace _SolarPanel.Scripts
                 SelectedPanel = panel;
             }
         }
-
+        
         public int GetPanelCount()
         {
             return 
@@ -139,5 +151,18 @@ namespace _SolarPanel.Scripts
     {
         public RoofType RoofType { get; set; } = RoofType.Односкатная;
         public int Angle { get; set; } = 12;
+    }
+
+    [Serializable]
+    public class SelectedAppliance
+    {
+        public Appliances Appliance;
+        public int Count;
+
+        public SelectedAppliance(Appliances appliance, int count)
+        {
+            Appliance = appliance;
+            Count = count;
+        }
     }
 }
