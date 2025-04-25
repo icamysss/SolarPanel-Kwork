@@ -20,6 +20,7 @@ namespace _SolarPanel.Scripts.SM.States
         {
             base.Exit();
             ShowUI(false);
+            uiManager.powerConsumption.CalculateDailyConsumption();
         }
 
         private void ShowUI(bool show)

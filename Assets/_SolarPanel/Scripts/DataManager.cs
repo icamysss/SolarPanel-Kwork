@@ -23,10 +23,6 @@ namespace _SolarPanel.Scripts
         public SolarPanel SelectedPanel { get; private set; }
         public float RequiredPower { get; set; }
         public float DailyConsumption { get; set; }
-        public List<SelectedAppliance> SelectedAppliances { get; private set; }
-
-        
-        private List<SelectedAppliance> _selectedAppliances = new();
 
         // Кэшированные данные
         private Dictionary<string, City> _citiesCache;
@@ -87,7 +83,17 @@ namespace _SolarPanel.Scripts
                 SelectedPanel = panel;
             }
         }
-        
+
+        public void SelectAppliance(string applianceName, int amount)
+        {
+            DailyConsumption += amount * GetAppliances(applianceName).DailyConsumption ;
+        }
+
+        private Appliances GetAppliances(string applianceName)
+        {
+            return _appliancesCache.GetValueOrDefault(applianceName);
+        }
+
         public int GetPanelCount()
         {
             return 
@@ -117,6 +123,11 @@ namespace _SolarPanel.Scripts
         public IEnumerable<string> GetCityNames()
         {
             return _citiesCache.Keys;
+        }
+
+        public IEnumerable<string> GetAppliancesNames()
+        {
+           return _appliancesCache.Keys;
         }
 
         public IEnumerable<string> GetAllPanels()
@@ -152,17 +163,5 @@ namespace _SolarPanel.Scripts
         public RoofType RoofType { get; set; } = RoofType.Односкатная;
         public int Angle { get; set; } = 12;
     }
-
-    [Serializable]
-    public class SelectedAppliance
-    {
-        public Appliances Appliance;
-        public int Count;
-
-        public SelectedAppliance(Appliances appliance, int count)
-        {
-            Appliance = appliance;
-            Count = count;
-        }
-    }
+    
 }

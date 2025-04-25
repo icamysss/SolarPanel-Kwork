@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -7,9 +8,15 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
     public class PowerConsumption : CanvasGroupMenu
     {
         [SerializeField] private TMP_InputField dailyConsumption;
-
-        private ConsumptionMode _consumptionMode;
+        [SerializeField] private Transform applianceItemContainer;
+        [SerializeField] private ApplianceItem applianceItem;
+        [SerializeField] private CanvasGroup applianceSelecting;
+       
         
+        private ConsumptionMode _consumptionMode;
+        private List<ApplianceItem> _applianceItems = new();
+
+        private float enteredConsumption;
         private void Start()
         {
             if (dailyConsumption == null) throw new NullReferenceException("PowerConsumption");
@@ -19,24 +26,53 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
         {
             base.Initialize();
             InitDailyConsumption();
-            InputMode = ConsumptionMode.InputDailyConsumption;
+            
         }
 
         private void InitDailyConsumption()
         {
+            InputMode = ConsumptionMode.InputDailyConsumption;
             dailyConsumption.onEndEdit.AddListener(OnDailyConsumptionEnter);
             dailyConsumption.onEndEdit.Invoke(100f.ToString());
             dailyConsumption.text = 100f.ToString();
+
+            foreach (var ap in DataManager.Instance.GetAppliancesNames())
+            {
+                var item = Instantiate(applianceItem, applianceItemContainer);
+                item.Initialize(ap);
+                _applianceItems.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Отправлет данные в DataManager
+        /// </summary>
+        public void CalculateDailyConsumption()
+        {
+            DataManager.Instance.DailyConsumption = 0;
+            if (InputMode == ConsumptionMode.InputDailyConsumption)
+            {
+                DataManager.Instance.DailyConsumption = enteredConsumption;
+            }
+            if (InputMode == ConsumptionMode.SelectAppliance)
+            {
+                foreach (var item in _applianceItems)
+                {
+                    if (item.IsSelected)
+                    {
+                        DataManager.Instance.SelectAppliance(item.Name, item.Amount);
+                    }
+                }
+            }
+            Debug.Log($"Суточное потребление: { DataManager.Instance.DailyConsumption}");
         }
         
         private void OnDailyConsumptionEnter(string value)
         {
-            if (float.TryParse(value, out var result))
-            {
-                result = Mathf.Clamp(result, 0f, 200f);
-                DataManager.Instance.DailyConsumption = result;
-            }
-            Debug.Log($"Суточное потребление: { DataManager.Instance.DailyConsumption}");
+            if (!float.TryParse(value, out var result)) return;
+            
+            result = Mathf.Clamp(result, 0f, 200f);
+            enteredConsumption = result;
         }
 
         public ConsumptionMode InputMode
@@ -46,7 +82,6 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
             {
                 _consumptionMode = value;
                 ShowConsumptionMode(_consumptionMode);
-                DataManager.Instance.DailyConsumption = 0f;
             }
         }
 
@@ -55,10 +90,12 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
             if (mode == ConsumptionMode.SelectAppliance)
             {
                 dailyConsumption.gameObject.SetActive(false);
+                UIManager.Show(applianceSelecting);
             }
             if (mode == ConsumptionMode.InputDailyConsumption)
             {
                 dailyConsumption.gameObject.SetActive(true);
+                UIManager.Show(applianceSelecting, false);
             }
         }
 
