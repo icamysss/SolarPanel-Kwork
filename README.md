@@ -61,7 +61,6 @@
 
 ## 📂 **Документация**
 - **Техническое задание**: [Technical specification](https://github.com/icamysss/SolarPanel-Kwork/tree/main/Technical%20specification).
-- **Черновик проекта**: [Черновик.pdf](https://github.com/icamysss/SolarPanel-Kwork/blob/main/Technical%20specification/%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B2%D0%B8%D0%BA.pdf)
 - **Формулы**:  
   <img src="https://github.com/icamysss/SolarPanel-Kwork/blob/main/Technical%20specification/ФормулаРасчетаМощности.jpg" 
     width="500">
@@ -83,8 +82,9 @@
   - Поддержка выбора электроприборов
 
 - **Для портфолио**:
-  - Демонстрация навыков работы с Unity, C#, SO.
+  - Демонстрация навыков работы с Unity, C#, SO, ProBuilder api 
   - Опыт взаимодействия с клиентом: сбор требований, уточнение деталей, адаптация под изменения.
+  - **Черновик проекта**: [Черновик.pdf](https://github.com/icamysss/SolarPanel-Kwork/blob/main/Technical%20specification/%D0%A7%D0%B5%D1%80%D0%BD%D0%BE%D0%B2%D0%B8%D0%BA.pdf)
 
 --- 
 
