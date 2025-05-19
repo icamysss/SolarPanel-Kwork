@@ -78,6 +78,7 @@ namespace _SolarPanel.Scripts.UI.PowerConsumption
             if (!float.TryParse(value, out var result)) return;
             
             result = Mathf.Clamp(result, 0f, 200f);
+            dailyConsumption.text = result.ToString();
             enteredConsumption = result;
         }
 

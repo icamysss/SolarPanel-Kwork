@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using _SolarPanel.Scripts.Data;
 using TMPro;
 using UnityEngine;
@@ -117,6 +118,7 @@ namespace _SolarPanel.Scripts.UI.HouseParameters
             if (float.TryParse(value, out var result))
             {
                 result = Mathf.Clamp(result, 3f, 30f );
+                lengthHouse.text = result.ToString();
                 DataManager.Instance.HouseParam.HouseLength = result;
                 
             }
@@ -128,6 +130,7 @@ namespace _SolarPanel.Scripts.UI.HouseParameters
             if (float.TryParse(value, out var result))
             {
                 result = Mathf.Clamp(result, 3f, 30f);
+                widthHouse.text = result.ToString();
                 DataManager.Instance.HouseParam.HouseWidth = result;
             }
             Debug.Log($"House Width: {DataManager.Instance.HouseParam.HouseWidth}");

@@ -45,7 +45,10 @@ namespace _SolarPanel.Scripts.UI.CalculationResults
 
         public void UpdateSelectedPanelText()
         {
-            selectedPanel.text = $"Необходимое кол-во панелей: \n {DataManager.Instance.GetPanelCount()} шт.";
+            selectedPanel.text = $"Необходимое кол-во панелей: {DataManager.Instance.GetPanelCount()} шт. " +
+                                 $"\nМощность панели: {DataManager.Instance.SelectedPanel.NominalPower} Вт" +
+                                 $"\nДлина панели: {DataManager.Instance.SelectedPanel.Dimensions.x} мм" +
+                                 $"\nШирина панели: {DataManager.Instance.SelectedPanel.Dimensions.z} мм";
         }
     }
 }
