@@ -26,6 +26,6 @@ namespace _SolarPanel.Scripts
         //     }
         //
         //     Debug.Log($"Excel файл создан: {filePath}");
-        }
+        // }
     }
 }
