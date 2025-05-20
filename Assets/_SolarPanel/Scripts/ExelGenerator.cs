@@ -32,7 +32,7 @@ namespace _SolarPanel.Scripts
                 worksheet.Cells[4, 1].Value = "Ширина Дома";
                 worksheet.Cells[4, 2].Value = DataManager.Instance.HouseParam.HouseWidth;
                 
-                worksheet.Cells[5, 1].Value = "Город";
+                worksheet.Cells[5, 1].Value = "Тип кровли";
                 worksheet.Cells[5, 2].Value = "-";
                 
                 worksheet.Cells[6, 1].Value = "Город";
