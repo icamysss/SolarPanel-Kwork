@@ -4687,6 +4687,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1228615933}
   - component: {fileID: 1228615932}
+  - component: {fileID: 1228615934}
   m_Layer: 0
   m_Name: DataManager
   m_TagString: Untagged
@@ -4724,6 +4725,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1228615934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228615931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05b78a20c28b415db7f38c5acc464f7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileName: GeneratedExcel.xlsx
+  savePath: Assets/GeneratedExcel/
 --- !u!1 &1253488333
 GameObject:
   m_ObjectHideFlags: 0
