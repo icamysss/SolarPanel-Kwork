@@ -1,7 +1,7 @@
 using System.IO;
 using UnityEngine;
 using OfficeOpenXml;
-#if UNITY_STANDALONE || UNITY_EDITOR
+#if !UNITY_WEBGL && !UNITY_ANDROID && !UNITY_IOS
 using SFB;
 #endif
 
@@ -87,7 +87,7 @@ namespace _SolarPanel.Scripts
 
         private void SaveExcelFile(byte[] data)
         {
-#if UNITY_STANDALONE || UNITY_EDITOR
+            Debug.Log("Standalone path: " + Path.Combine(Application.persistentDataPath, defaultFolder));
             var path = StandaloneFileBrowser.SaveFilePanel(
                 "Сохранить отчёт",
                 Path.Combine(Application.persistentDataPath, defaultFolder),
@@ -98,10 +98,6 @@ namespace _SolarPanel.Scripts
             {
                 SaveToFile(path, data);
             }
-#else
-            string mobilePath = Path.Combine(Application.persistentDataPath, defaultFileName);
-            SaveToFile(mobilePath, data);
-#endif
         }
 
         private void SaveToFile(string path, byte[] data)
