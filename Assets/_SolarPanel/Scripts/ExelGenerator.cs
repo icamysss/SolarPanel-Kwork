@@ -1,98 +1,126 @@
 using System.IO;
 using UnityEngine;
-using OfficeOpenXml; 
+using OfficeOpenXml;
+#if UNITY_STANDALONE || UNITY_EDITOR
+using SFB;
+#endif
 
 namespace _SolarPanel.Scripts
 {
     public class ExcelGenerator : MonoBehaviour
     {
-        [SerializeField] private string fileName = "GeneratedExcel.xlsx";
-        [SerializeField] private string savePath = "Assets/GeneratedExcel/";
+        [SerializeField] private string defaultFileName = "SolarReport.xlsx";
+        [SerializeField] private string defaultFolder = "SolarReports";
 
-        
-        public void GenerateExcelFile()
+        public void GenerateAndSaveExcel()
         {
-            // Создание нового Excel-пакета
-            using (ExcelPackage excelPackage = new ExcelPackage())
+            try
             {
-                // Добавление листа
-                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Solar Panels");
-
-                // Заголовки таблицы
-                worksheet.Cells[1, 1].Value = "Харрактеристика";
-                worksheet.Cells[1, 2].Value = "Значение";
-            
-                // Данные
-                worksheet.Cells[2, 1].Value = "Город";
-                worksheet.Cells[2, 2].Value = DataManager.Instance.SelectedCity.Name;
-            
-                worksheet.Cells[3, 1].Value = "Длина дома";
-                worksheet.Cells[3, 2].Value = DataManager.Instance.HouseParam.HouseLength;
-                
-                worksheet.Cells[4, 1].Value = "Ширина Дома";
-                worksheet.Cells[4, 2].Value = DataManager.Instance.HouseParam.HouseWidth;
-                
-                worksheet.Cells[5, 1].Value = "Тип кровли";
-                worksheet.Cells[5, 2].Value = "-";
-                
-                worksheet.Cells[6, 1].Value = "Город";
-                worksheet.Cells[6, 2].Value = "-";
-                
-                worksheet.Cells[7, 1].Value = "Город";
-                worksheet.Cells[7, 2].Value = "-";
-                
-                worksheet.Cells[8, 1].Value = "Город";
-                worksheet.Cells[8, 2].Value = "-";
-                
-                worksheet.Cells[9, 1].Value = "Город";
-                worksheet.Cells[9, 2].Value = "-";
-                
-                worksheet.Cells[10, 1].Value = "Город";
-                worksheet.Cells[10, 2].Value = "-";
-                
-                worksheet.Cells[11, 1].Value = "Город";
-                worksheet.Cells[11, 2].Value = "-";
-                
-                worksheet.Cells[12, 1].Value = "Город";
-                worksheet.Cells[12, 2].Value = "-";
-                
-                worksheet.Cells[13, 1].Value = "Город";
-                worksheet.Cells[13, 2].Value = "-";
-                
-                worksheet.Cells[14, 1].Value = "Город";
-                worksheet.Cells[14, 2].Value = "-";
-                
-                worksheet.Cells[15, 1].Value = "Город";
-                worksheet.Cells[15, 2].Value = "-";
-                
-                worksheet.Cells[16, 1].Value = "Город";
-                worksheet.Cells[16, 2].Value = "-";
-                
-                worksheet.Cells[17, 1].Value = "Город";
-                worksheet.Cells[17, 2].Value = "-";
-                
-                
-
-                // Путь для сохранения
-               // savePath = GetFullPath();
-                var filePath = Path.Combine(savePath, fileName);
-                
-                // Сохранение файла
-                var excelFile = new FileInfo(filePath);
-                excelPackage.SaveAs(excelFile);
-
-                Debug.Log($"Excel файл создан: {filePath}");
+                var excelData = GenerateExcelData();
+                SaveExcelFile(excelData);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Ошибка генерации Excel: {ex.Message}");
             }
         }
 
-        string GetFullPath()
+        private byte[] GenerateExcelData()
         {
-            // Создаем директорию, если не существует
-            if (!Directory.Exists(savePath))
+            using (ExcelPackage excelPackage = new ExcelPackage())
             {
-                Directory.CreateDirectory(savePath);
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Отчёт");
+                AddHeaders(worksheet);
+                FillData(worksheet);
+                FormatColumns(worksheet);
+                return excelPackage.GetAsByteArray();
             }
-            return Path.Combine(savePath, fileName);
+        }
+
+        private void AddHeaders(ExcelWorksheet ws)
+        {
+            ws.Cells[1, 1].Value = "Характеристика";
+            ws.Cells[1, 2].Value = "Значение";
+        }
+
+        private void FillData(ExcelWorksheet ws)
+        {
+            var data = DataManager.Instance;
+            int row = 2;
+
+            AddRow(ws, ref row, "Город", data.SelectedCity?.Name ?? "-");
+            AddRow(ws, ref row, "Длина дома", $"{data.HouseParam.HouseLength} м");
+            AddRow(ws, ref row, "Ширина дома", $"{data.HouseParam.HouseWidth} м");
+            AddRow(ws, ref row, "Тип кровли", data.HouseParam.Roof.RoofType.ToString());
+            AddRow(ws, ref row, "Угол наклона кровли", $"{data.HouseParam.Roof.Angle}°");
+            AddRow(ws, ref row, "Энергопотребление", $"{data.DailyConsumption} кВт·ч/день");
+            AddRow(ws, ref row, "Солнечная панель", data.SelectedPanel?.PanelName ?? "-");
+            
+            if (data.SelectedPanel != null)
+            {
+                AddRow(ws, ref row, "Мощность панели", $"{data.SelectedPanel.NominalPower} кВт");
+                AddRow(ws, ref row, "Длина панели", $"{data.SelectedPanel.Dimensions.x} м");
+                AddRow(ws, ref row, "Ширина панели", $"{data.SelectedPanel.Dimensions.z} м");
+                AddRow(ws, ref row, "Высота панели", $"{data.SelectedPanel.Dimensions.y} м");
+            }
+            
+            AddRow(ws, ref row, "Уровень инсоляции", $"{data.GetCityAverageInsolation()} кВт·ч/м²/день");
+            AddRow(ws, ref row, "Оптимальный угол наклона", $"{data.GetAverageOptimalAngle()}°");
+            AddRow(ws, ref row, "Расчетный угол наклона", $"{data.HouseParam.Roof.Angle}°");
+            AddRow(ws, ref row, "Требуемая мощность панелей", $"{data.RequiredPower} кВт");
+            AddRow(ws, ref row, "Необходимое количество панелей", data.GetPanelCount());
+        }
+
+        private void AddRow(ExcelWorksheet ws, ref int row, string parameter, object value)
+        {
+            ws.Cells[row, 1].Value = parameter;
+            ws.Cells[row, 2].Value = value;
+            row++;
+        }
+
+        private void FormatColumns(ExcelWorksheet ws)
+        {
+            ws.Column(1).Width = 35;
+            ws.Column(2).Width = 25;
+            ws.Cells[1, 1, 1, 2].Style.Font.Bold = true;
+        }
+
+        private void SaveExcelFile(byte[] data)
+        {
+#if UNITY_STANDALONE || UNITY_EDITOR
+            var path = StandaloneFileBrowser.SaveFilePanel(
+                "Сохранить отчёт",
+                Path.Combine(Application.persistentDataPath, defaultFolder),
+                defaultFileName,
+                "xlsx");
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                SaveToFile(path, data);
+            }
+#else
+            string mobilePath = Path.Combine(Application.persistentDataPath, defaultFileName);
+            SaveToFile(mobilePath, data);
+#endif
+        }
+
+        private void SaveToFile(string path, byte[] data)
+        {
+            try
+            {
+                string directory = Path.GetDirectoryName(path);
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                File.WriteAllBytes(path, data);
+                Debug.Log($"Файл успешно сохранён: {path}");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Ошибка сохранения: {ex.Message}");
+            }
         }
     }
 }

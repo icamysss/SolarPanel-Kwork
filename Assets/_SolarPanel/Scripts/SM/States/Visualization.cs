@@ -28,7 +28,7 @@ namespace _SolarPanel.Scripts.SM.States
             }
 
             var exel = Object.FindFirstObjectByType<ExcelGenerator>();
-            exel.GenerateExcelFile();
+            exel.GenerateAndSaveExcel();
         }
 
         public override void Exit()
