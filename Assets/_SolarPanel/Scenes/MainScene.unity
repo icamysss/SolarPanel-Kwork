@@ -4737,8 +4737,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05b78a20c28b415db7f38c5acc464f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: GeneratedExcel.xlsx
-  savePath: Assets/GeneratedExcel/
+  defaultFileName: SolarReport
+  defaultFolder: SolarReports
 --- !u!1 &1253488333
 GameObject:
   m_ObjectHideFlags: 0
