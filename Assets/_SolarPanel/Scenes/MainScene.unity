@@ -2443,6 +2443,9 @@ MonoBehaviour:
   optimalAngle: {fileID: 1784369454}
   installAngle: {fileID: 1415924624}
   reportButton: {fileID: 6158027686599634472}
+  failReport: {r: 1, g: 0, b: 0, a: 1}
+  goodReport: {r: 0, g: 1, b: 0, a: 1}
+  timeToChangeColor: 5
 --- !u!1 &765070577
 GameObject:
   m_ObjectHideFlags: 0
@@ -4738,8 +4741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05b78a20c28b415db7f38c5acc464f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultFileName: SolarReport
-  defaultFolder: SolarReports
+  defaultFileName: SolarReport.xlsx
 --- !u!1 &1253488333
 GameObject:
   m_ObjectHideFlags: 0
@@ -8728,7 +8730,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 725, y: 688}
+  m_AnchoredPosition: {x: 120, y: 157}
   m_SizeDelta: {x: 300, y: 70}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &858920492681630328

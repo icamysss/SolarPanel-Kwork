@@ -1,40 +1,40 @@
+using System;
 using System.IO;
 using UnityEngine;
 using OfficeOpenXml;
-#if !UNITY_WEBGL && !UNITY_ANDROID && !UNITY_IOS
-using SFB;
-#endif
+using System.Text;
 
 namespace _SolarPanel.Scripts
 {
     public class ExcelGenerator : MonoBehaviour
     {
         [SerializeField] private string defaultFileName = "SolarReport.xlsx";
-        [SerializeField] private string defaultFolder = "SolarReports";
 
-        public void GenerateAndSaveExcel()
+        public bool GenerateAndSaveExcel()
         {
             try
             {
                 var excelData = GenerateExcelData();
                 SaveExcelFile(excelData);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogError($"Ошибка генерации Excel: {ex.Message}");
+                return false;
             }
+            
+            return true;
         }
 
         private byte[] GenerateExcelData()
         {
-            using (ExcelPackage excelPackage = new ExcelPackage())
-            {
-                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Отчёт");
-                AddHeaders(worksheet);
-                FillData(worksheet);
-                FormatColumns(worksheet);
-                return excelPackage.GetAsByteArray();
-            }
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            using var excelPackage = new ExcelPackage();
+            var worksheet = excelPackage.Workbook.Worksheets.Add("Отчёт");
+            AddHeaders(worksheet);
+            FillData(worksheet);
+            FormatColumns(worksheet);
+            return excelPackage.GetAsByteArray();
         }
 
         private void AddHeaders(ExcelWorksheet ws)
@@ -87,12 +87,9 @@ namespace _SolarPanel.Scripts
 
         private void SaveExcelFile(byte[] data)
         {
-            Debug.Log("Standalone path: " + Path.Combine(Application.persistentDataPath, defaultFolder));
-            var path = StandaloneFileBrowser.SaveFilePanel(
-                "Сохранить отчёт",
-                Path.Combine(Application.persistentDataPath, defaultFolder),
-                defaultFileName,
-                "xlsx");
+            Debug.Log("Standalone path: " + Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+            var path = 
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), defaultFileName);
 
             if (!string.IsNullOrEmpty(path))
             {
@@ -107,13 +104,13 @@ namespace _SolarPanel.Scripts
                 string directory = Path.GetDirectoryName(path);
                 if (!Directory.Exists(directory))
                 {
-                    Directory.CreateDirectory(directory);
+                    if (directory != null) Directory.CreateDirectory(directory);
                 }
 
                 File.WriteAllBytes(path, data);
                 Debug.Log($"Файл успешно сохранён: {path}");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogError($"Ошибка сохранения: {ex.Message}");
             }
