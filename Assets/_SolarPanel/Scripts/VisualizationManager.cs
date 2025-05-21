@@ -10,6 +10,7 @@ namespace _SolarPanel.Scripts
         public static VisualizationManager Instance;
         public Texture2D wallTexture;
         public Texture2D panelTexture;
+        public Texture2D roofTexture;
 
         private HouseParam houseParam;
         private SolarPanel panel;
@@ -37,7 +38,7 @@ namespace _SolarPanel.Scripts
             house = houseGenerator.GenerateHouse();
             // кровля
             Destroy(roof);
-            var roofGenerator = new RoofGenerator(houseParam, transform);
+            var roofGenerator = new RoofGenerator(houseParam, transform, roofTexture);
             roof = roofGenerator.GenerateRoof();
             // Панели
             Destroy(panels);

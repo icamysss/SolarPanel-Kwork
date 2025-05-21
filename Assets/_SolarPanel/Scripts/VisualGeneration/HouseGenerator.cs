@@ -38,7 +38,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
             // 24 вершины (6 граней × 4 вершины)
             Vector3[] vertices = new Vector3[24];
             Vector2[] uv = new Vector2[24];
-            float textureScale = 0.3f;
+            float textureScale = 0.6f;
 
             // 1. Передняя грань (Z-)
             vertices[0] = new Vector3(-width/2, 0, -length/2);
