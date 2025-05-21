@@ -1692,6 +1692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallTexture: {fileID: 2800000, guid: ed066ac4e4b1947acb71603a6be7beb1, type: 3}
+  panelTexture: {fileID: 2800000, guid: 2ad768c3dd6d2478bbfb908660451e68, type: 3}
   StartPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
