@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using _SolarPanel.Scripts.Data;
 using TMPro;
 using UnityEngine;

@@ -26,7 +26,6 @@ namespace _SolarPanel.Scripts.SM.States
                 cam.LookPoint = VisualizationManager.Instance.StartPosition;
                //cam.gameObject.transform.position = VisualizationManager.Instance.StartPosition;
             }
-           
         }
 
         public override void Exit()
