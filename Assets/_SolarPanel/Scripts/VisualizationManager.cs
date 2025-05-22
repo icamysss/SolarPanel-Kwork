@@ -8,6 +8,9 @@ namespace _SolarPanel.Scripts
     public class VisualizationManager : MonoBehaviour
     {
         public static VisualizationManager Instance;
+        public Texture2D wallTexture;
+        public Texture2D panelTexture;
+        public Texture2D roofTexture;
 
         private HouseParam houseParam;
         private SolarPanel panel;
@@ -31,15 +34,15 @@ namespace _SolarPanel.Scripts
             GetData();
             // Дом
             Destroy(house);
-            var houseGenerator = new HouseGenerator(houseParam, transform);
+            var houseGenerator = new HouseGenerator(houseParam, transform, wallTexture);
             house = houseGenerator.GenerateHouse();
             // кровля
             Destroy(roof);
-            var roofGenerator = new RoofGenerator(houseParam, transform);
+            var roofGenerator = new RoofGenerator(houseParam, transform, roofTexture);
             roof = roofGenerator.GenerateRoof();
             // Панели
             Destroy(panels);
-            var panelPlacer = new PanelPlacer(transform, out StartPosition );
+            var panelPlacer = new PanelPlacer(transform, out StartPosition, panelTexture);
             panels = panelPlacer.Place();
         }
 

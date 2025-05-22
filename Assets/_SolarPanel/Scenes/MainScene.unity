@@ -1691,6 +1691,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14804f364840496a952cee5abfe0ba0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallTexture: {fileID: 2800000, guid: 7522d7e3f371e4346b3306957860c01b, type: 3}
+  panelTexture: {fileID: 2800000, guid: 2ad768c3dd6d2478bbfb908660451e68, type: 3}
+  roofTexture: {fileID: 2800000, guid: 28da7cab546c84645b8228421c586f8f, type: 3}
   StartPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
@@ -3880,7 +3883,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4751dec74aad240528f4877c37728dc7, type: 2}
+  - {fileID: 2100000, guid: eefe76a66aa4a4dc1a3f66dd36ea8806, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7596,7 +7599,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1965726086}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

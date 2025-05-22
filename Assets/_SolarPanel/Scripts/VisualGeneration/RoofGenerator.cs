@@ -10,39 +10,41 @@ namespace _SolarPanel.Scripts.VisualGeneration
 {
     public class RoofGenerator
     {
-        private readonly HouseParam houseParam;
-        private readonly Transform parent;
+        private readonly HouseParam _houseParam;
+        private readonly Transform _parent;
+        private Texture2D _texture;
 
-        public RoofGenerator(HouseParam houseParam, Transform parent = null)
+        public RoofGenerator(HouseParam houseParam, Transform parent = null, Texture2D texture = null)
         {
-            this.houseParam = houseParam;
-            this.parent = parent;
+            this._houseParam = houseParam;
+            this._parent = parent;
+            _texture = texture;
         }
 
 
         public GameObject GenerateRoof()
         {
-            if (houseParam.Roof.RoofType == RoofType.Односкатная) return GenerateSingleRoof();
-            if (houseParam.Roof.RoofType == RoofType.Двухскатная) return GenerateDoubleRoof();
+            if (_houseParam.Roof.RoofType == RoofType.Односкатная) return GenerateSingleRoof();
+            if (_houseParam.Roof.RoofType == RoofType.Двухскатная) return GenerateDoubleRoof();
             return null;
         }
 
         private GameObject GenerateSingleRoof()
         {
-            if (houseParam.Roof.Angle == 0f)
+            if (_houseParam.Roof.Angle == 0f)
             {
                 // Создаем плоскую крышу
                 var roofMesh = ShapeGenerator.GeneratePlane(
                     PivotLocation.Center,
-                    houseParam.HouseLength, //+ Constants.ROOF_OVERHANG * 2,
-                    houseParam.HouseWidth, // + Constants.ROOF_OVERHANG * 2,
+                    _houseParam.HouseLength, //+ Constants.ROOF_OVERHANG * 2,
+                    _houseParam.HouseWidth, // + Constants.ROOF_OVERHANG * 2,
                     1, 1,
                     Axis.Up
                     );
 
                 roofMesh.transform.position = new Vector3(
                     0f,
-                    houseParam.HouseHeight + 0.01f,
+                    _houseParam.HouseHeight + 0.01f,
                     0f
                     );
 
@@ -50,9 +52,9 @@ namespace _SolarPanel.Scripts.VisualGeneration
             }
 
             // Рассчитываем параметры
-            var triangleBaseLength = houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2 ;
-            var roofLength = houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
-            var triangleHeight = triangleBaseLength * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
+            var triangleBaseLength = _houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2 ;
+            var roofLength = _houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
+            var triangleHeight = triangleBaseLength * Mathf.Tan(_houseParam.Roof.Angle * Mathf.Deg2Rad);
            
             // Создаем меш треугольника по центру
             var triangle = CreateTriangle(triangleBaseLength, triangleHeight);
@@ -64,19 +66,19 @@ namespace _SolarPanel.Scripts.VisualGeneration
             
             
             // ставим на место
-            triangle.transform.position = new Vector3(0f, houseParam.HouseHeight, 0f);
-            triangle2.transform.position = new Vector3(0f, houseParam.HouseHeight, 0f);
+            triangle.transform.position = new Vector3(0f, _houseParam.HouseHeight, 0f);
+            triangle2.transform.position = new Vector3(0f, _houseParam.HouseHeight, 0f);
             
             var roof = new GameObject("Roof");
             FinalizeRoof(triangle).transform.SetParent(roof.transform);
             FinalizeRoof(triangle2).transform.SetParent(roof.transform);
-            roof.transform.SetParent(parent);
+            roof.transform.SetParent(_parent);
             return roof;
         }
         
         private GameObject GenerateDoubleRoof()
         {
-            if (houseParam.Roof.Angle == 0f)
+            if (_houseParam.Roof.Angle == 0f)
             {
                 // Создаем плоскую крышу аналогично односкатной
                 return GenerateSingleRoof();
@@ -84,9 +86,9 @@ namespace _SolarPanel.Scripts.VisualGeneration
             else
             {
                 // Рассчитываем параметры треугольной призмы
-                var baseWidth = houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2;
-                var fullLength = houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
-                var height = (baseWidth / 2) * Mathf.Tan(houseParam.Roof.Angle * Mathf.Deg2Rad);
+                var baseWidth = _houseParam.HouseWidth + Constants.ROOF_OVERHANG * 2;
+                var fullLength = _houseParam.HouseLength + Constants.ROOF_OVERHANG * 2;
+                var height = (baseWidth / 2) * Mathf.Tan(_houseParam.Roof.Angle * Mathf.Deg2Rad);
 
                 // Создаем треугольник основания
 
@@ -95,9 +97,9 @@ namespace _SolarPanel.Scripts.VisualGeneration
               
                 // Позиционируем и дублируем для симметрии
                 var roof = FinalizeRoof(triangle);
-                roof.transform.localPosition = new Vector3(0, houseParam.HouseHeight + height / 2, 0);
+                roof.transform.localPosition = new Vector3(0, _houseParam.HouseHeight + height / 2, 0);
 
-                roof.transform.SetParent(parent);
+                roof.transform.SetParent(_parent);
                 return roof;
             }
         }
@@ -131,14 +133,18 @@ namespace _SolarPanel.Scripts.VisualGeneration
         {
             // Применяем материал
             Material roofMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-            roofMaterial.color = Constants.ROOF_COLOR;
+            roofMaterial.mainTexture = _texture;
+            roofMaterial.mainTextureOffset = new Vector2(0.5f, 0.5f);
+            roofMaterial.mainTextureScale = new Vector2(-.5f, -.5f);
+           
+            //roofMaterial.color = Constants.ROOF_COLOR;
             mesh.GetComponent<MeshRenderer>().material = roofMaterial;
             
 
             // Назначаем родителя
-            if (parent != null)
+            if (_parent != null)
             {
-                mesh.transform.SetParent(parent, false);
+                mesh.transform.SetParent(_parent, false);
             }
 
             // Конвертируем в обычный GameObject
@@ -149,6 +155,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
             return roofObject;
         }
 
+       
         private void Extrude(ProBuilderMesh mesh, IEnumerable<Face> faces, ExtrudeMethod method, float distance)
         {
             mesh.Extrude(faces, method, distance);

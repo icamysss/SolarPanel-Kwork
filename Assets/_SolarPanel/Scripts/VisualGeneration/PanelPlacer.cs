@@ -25,7 +25,8 @@ namespace _SolarPanel.Scripts.VisualGeneration
         private readonly float _optimalAngle; // Оптимальный угол относительно земли
         private readonly Vector2 _availableRoofArea;  // зона в которой можно разместить панели
 
-        public PanelPlacer(Transform parent, out Vector3 startPoint)
+        private Texture2D _panelTexture;
+        public PanelPlacer(Transform parent, out Vector3 startPoint, Texture2D panelTexture)
         {
             if (parent != null) _parent = parent;
             
@@ -37,6 +38,7 @@ namespace _SolarPanel.Scripts.VisualGeneration
             _startPoint = GetStartPosition();
             startPoint = _startPoint;
             _availableRoofArea = GetUsefulRoofSize();
+            _panelTexture  = panelTexture;
         }
 
         public GameObject Place()
@@ -236,37 +238,113 @@ namespace _SolarPanel.Scripts.VisualGeneration
         /// <returns>Объект солнечной панели, с правильным пивотом сразу</returns>
         private GameObject CreatePanel()
         {
-            // Создаем ProBuilder mesh
-            var pbMesh = ShapeGenerator.GenerateCube(PivotLocation.Center, _panelSize);
+             // Создаем основной объект панели
+            GameObject panel = new GameObject(_panel.PanelName);
+            
+            // Добавляем компоненты меша
+            MeshFilter meshFilter = panel.AddComponent<MeshFilter>();
+            MeshRenderer meshRenderer = panel.AddComponent<MeshRenderer>();
 
-            // Смещаем позицию чтобы нижняя грань была на Y=0
-            pbMesh.transform.position = new Vector3(
-                0f,
-                _panelSize.y / 2f,
-                0f
-                );
+            // Создаем и настраиваем меш
+            Mesh mesh = new Mesh();
+            mesh.name = "PanelMesh";
 
-            // Применяем изменения
-            pbMesh.ToMesh();
-            pbMesh.Refresh();
+            // Размеры панели из параметров
+            Vector3 size = _panelSize;
+            
+            // 1. Вершины (24 точки - 6 граней × 4 вершины)
+            Vector3[] vertices = new Vector3[24];
+            
+            // Передняя грань (Z+)
+            vertices[0] = new Vector3(-size.x/2, -size.y/2,  size.z/2);
+            vertices[1] = new Vector3( size.x/2, -size.y/2,  size.z/2);
+            vertices[2] = new Vector3( size.x/2,  size.y/2,  size.z/2);
+            vertices[3] = new Vector3(-size.x/2,  size.y/2,  size.z/2);
 
-            // Создаем материал
-            var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-            mat.color = Constants.PANELS_COLOR;
+            // Задняя грань (Z-)
+            vertices[4] = new Vector3(-size.x/2, -size.y/2, -size.z/2);
+            vertices[5] = new Vector3( size.x/2, -size.y/2, -size.z/2);
+            vertices[6] = new Vector3( size.x/2,  size.y/2, -size.z/2);
+            vertices[7] = new Vector3(-size.x/2,  size.y/2, -size.z/2);
 
-            // Назначаем материал
-            pbMesh.GetComponent<MeshRenderer>().material = mat;
+            // Боковые грани
+            // Левая (X-)
+            vertices[8] = vertices[4]; vertices[9] = vertices[0];
+            vertices[10] = vertices[3]; vertices[11] = vertices[7];
 
-            // Конвертируем в обычный GameObject
-            var go = pbMesh.gameObject;
-            go.name = "Panel";
+            // Правая (X+)
+            vertices[12] = vertices[1]; vertices[13] = vertices[5];
+            vertices[14] = vertices[6]; vertices[15] = vertices[2];
 
-            // Опционально: удаляем ProBuilder компоненты
-            Object.DestroyImmediate(pbMesh);
+            // Верхняя (Y+)
+            vertices[16] = vertices[3]; vertices[17] = vertices[2];
+            vertices[18] = vertices[6]; vertices[19] = vertices[7];
 
-            var panel = new GameObject(_panel.PanelName);
-            go.transform.SetParent(panel.transform);
+            // Нижняя (Y-)
+            vertices[20] = vertices[0]; vertices[21] = vertices[1];
+            vertices[22] = vertices[5]; vertices[23] = vertices[4];
 
+            // 2. Треугольники (12 треугольников)
+            int[] triangles = new int[36];
+            int triIndex = 0;
+            
+            void AddFace(int startVertex) {
+                triangles[triIndex++] = startVertex;
+                triangles[triIndex++] = startVertex + 1;
+                triangles[triIndex++] = startVertex + 2;
+                triangles[triIndex++] = startVertex;
+                triangles[triIndex++] = startVertex + 2;
+                triangles[triIndex++] = startVertex + 3;
+            }
+
+            for(int i = 0; i < 6; i++) {
+                AddFace(i * 4);
+            }
+
+            // 3. UV-координаты
+            Vector2[] uv = new Vector2[24];
+            float textureScale = 1f; // Масштаб текстуры
+
+            for(int i = 0; i < 6; i++) {
+                // Верхняя грань (индексы 4-й грани)
+                if(i == 4) {
+                    // UV для верхней грани (вершины 16-19)
+                    uv[16] = new Vector2(0, 0);
+                    uv[17] = new Vector2(size.x * textureScale, 0);
+                    uv[18] = new Vector2(size.x * textureScale, size.z * textureScale);
+                    uv[19] = new Vector2(0, size.z * textureScale);
+                }
+                else {
+                    // Простые UV для остальных граней
+                    int startIndex = i * 4;
+                    uv[startIndex] = new Vector2(0, 0);
+                    uv[startIndex + 1] = new Vector2(1, 0);
+                    uv[startIndex + 2] = new Vector2(1, 1);
+                    uv[startIndex + 3] = new Vector2(0, 1);
+                }
+            }
+            
+
+            // 4. Настройка меша
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.uv = uv;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+
+            meshFilter.mesh = mesh;
+
+            // 5. Настройка материала
+            var panelMat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            panelMat.mainTexture = _panelTexture;
+            panelMat.mainTextureScale = Vector2.one; // Тайлинг 1x1
+            panelMat.mainTexture.wrapMode = TextureWrapMode.Repeat;
+            
+            meshRenderer.material = panelMat;
+
+            // Смещаем пивот в нижнюю грань
+            panel.transform.position = new Vector3(0, size.y/2, 0);
+            
             return panel;
         }
     }
